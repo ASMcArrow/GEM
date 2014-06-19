@@ -35,22 +35,13 @@ GEMDetectorSD::ProcessHits(G4Step* aStep, G4TouchableHistory* obsolete)
     G4TouchableHistory* touchable = (G4TouchableHistory*)(preStep->GetTouchable());
 
     G4int i = touchable->GetReplicaNumber(0);
-    G4int j = touchable->GetReplicaNumber(1);
-
-    G4double area = pow(3.0/100.0, 2);
-
- /* G4double i = aStep->GetPostStepPoint()->GetPosition().getX();
-    G4double j = aStep->GetPostStepPoint()->GetPosition().getY();
-    G4double k = aStep->GetPostStepPoint()->GetPosition().getZ(); */
-
     G4double energyDeposit = aStep->GetTotalEnergyDeposit();
 
     if(energyDeposit != 0)
 	{
         GEMDetectorHit* detectorHit = new GEMDetectorHit();
         detectorHit->SetEdep(energyDeposit);
-        detectorHit->SetPos(G4ThreeVector(i, j, 0));
-        detectorHit->SetArea(area);
+        detectorHit->SetPos(G4ThreeVector(i, 0, 0));
         HitsCollection->insert(detectorHit);
 
         return true;

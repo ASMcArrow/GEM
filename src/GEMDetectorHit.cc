@@ -10,7 +10,6 @@ GEMDetectorHit::GEMDetectorHit()
 {
     EnergyDeposit = 0;
     Position.set(0,0,0);
-    Area = 0;
 }
 
 GEMDetectorHit::~GEMDetectorHit()
@@ -21,7 +20,6 @@ GEMDetectorHit::GEMDetectorHit(const GEMDetectorHit &right)
 {
    Position = right.Position;
    EnergyDeposit = right.EnergyDeposit;
-   Area = right.Area;
 }
 
 const GEMDetectorHit&
@@ -29,7 +27,6 @@ GEMDetectorHit::operator=(const GEMDetectorHit &right)
 {
     Position = right.Position;
     EnergyDeposit = right.EnergyDeposit;
-    Area = right.Area;
 
     return *this;
 }
@@ -46,7 +43,7 @@ void GEMDetectorHit::Draw()
 
 int GEMDetectorHit::operator==(const GEMDetectorHit &right) const
 {
-    return((Position==right.Position)&&(EnergyDeposit==right.EnergyDeposit))&&(Area==right.Area);
+    return((Position==right.Position)&&(EnergyDeposit==right.EnergyDeposit));
 }
 
 

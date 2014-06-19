@@ -19,20 +19,18 @@
 #include "GEMPhysicsList.hh"
 #include "GEMDetectorConstruction.hh"
 #include "GEMPrimaryGeneratorAction.hh"
-#include "GEMEventAction.hh"
-#include "GEMRunAction.hh"
-#include "GEMParallelWorld.hh"
 #include "GEMActionInitialization.hh"
+#include "GEMParallelWorld.hh"
 
 int main(int argc,char** argv)
 {
- //Test
+
  // Set the custom seed for the random engine
     G4Random::setTheEngine(new CLHEP::RanecuEngine);
     G4long seed = time(NULL);
     G4Random::setTheSeed(seed);
 
-#ifdef G4MULTITHREADED
+#ifndef G4MULTITHREADED
     G4MTRunManager* runManager = new G4MTRunManager;
     runManager->SetNumberOfThreads(8);
 #else

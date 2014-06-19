@@ -1,9 +1,9 @@
 #/geometry/navigator/push_notify 0
 #/geometry/navigator/verbose 0
-#/vis/open OGL
-#/tracking/verbose 0
+/vis/open OGLSQt
+/tracking/verbose 0
 #/vis/viewer/set/style surface
-#/vis/drawVolume worlds
+/vis/drawVolume worlds
 #/hits/activate FilmDetector
 #/tracking/storeTrajectory
 #/vis/scene/add/volume
@@ -11,5 +11,6 @@
 #/vis/scene/add/trajectories
 #/vis/scene/add/axes
 #/vis/scene/endOfEventAction accumulate
-/run/beamOn 10000000
+#/run/beamOn 100
+
 

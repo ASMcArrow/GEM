@@ -11,15 +11,14 @@ class GEMParallelWorld : public G4VUserParallelWorld
 {
 public:
     GEMParallelWorld(G4String worldName);
-    ~GEMParallelWorld();
+    virtual ~GEMParallelWorld();
 
-    void Construct();
-    void ConstructSD();
+    virtual void Construct();
+    virtual void ConstructSD();
 
 private:
-    G4LogicalVolume *GhostDetectorLog;
-    G4LogicalVolume *GhostXBoxLog;
-    G4LogicalVolume *GhostYBoxLog;
+    G4LogicalVolume *GhostTubeLog;
+    G4LogicalVolume *GhostZTubeLog;
 };
 #endif
 

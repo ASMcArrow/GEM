@@ -35,16 +35,9 @@ public:
     G4ThreeVector GetPos() const
     { return Position; }
 
-    void SetArea(G4double area)
-    { Area = area; }
-
-    G4double GetArea() const
-    { return Area; }
-
 private:
     G4ThreeVector Position; // Position
     G4double EnergyDeposit; // Energy deposit associated with the hit
-    G4double Area; // Area of the cell where this energy deposition occured
 };
 
 typedef G4THitsCollection<GEMDetectorHit> GEMDetectorHitsCollection;
