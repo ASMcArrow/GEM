@@ -5,12 +5,12 @@
 #/vis/viewer/set/style surface
 /vis/drawVolume worlds
 #/hits/activate FilmDetector
-#/tracking/storeTrajectory
-#/vis/scene/add/volume
-#/vis/scene/add/hits
-#/vis/scene/add/trajectories
+/tracking/storeTrajectory
+/vis/scene/add/volume
+/vis/scene/add/hits
+/vis/scene/add/trajectories
 #/vis/scene/add/axes
-#/vis/scene/endOfEventAction accumulate
-#/run/beamOn 100
+/vis/scene/endOfEventAction accumulate
+/run/beamOn 10
 
 

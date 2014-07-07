@@ -14,12 +14,14 @@
 #include "G4LogicalVolumeStore.hh"
 #include "G4SolidStore.hh"
 #include "G4VSolid.hh"
+#include "G4UniformMagField.hh"
+#include "G4FieldManager.hh"
 
 using namespace CLHEP;
 
 G4VPhysicalVolume* GEMDetectorConstruction::Construct()
 {
- // Cleanup old geometry
+    // Cleanup old geometry
     /*G4GeometryManager::GetInstance()->OpenGeometry();
     G4PhysicalVolumeStore::GetInstance()->Clean();
     G4LogicalVolumeStore::GetInstance()->Clean();
@@ -30,13 +32,24 @@ G4VPhysicalVolume* GEMDetectorConstruction::Construct()
     G4VisAttributes* visAttributes = new G4VisAttributes;
     visAttributes->SetForceWireframe(true);
 
- // World
+    // World
     G4Box* world = new G4Box("World", 4.0*m, 4.0*m, 4.0*m);
     G4LogicalVolume *worldLogic = new G4LogicalVolume(world, MaterialMap["Air"],"WorldLogic");
     G4VPhysicalVolume *worldPhys = new G4PVPlacement(0, G4ThreeVector(), worldLogic, "WorldPhys", 0, false, 0);
     worldLogic->SetVisAttributes(visAttributes);
 
- // PDM Detector
+    // Scanning Magnet
+    G4Tubs* magnet = new G4Tubs("Magnet", 0*cm, 2.54*cm, 25*cm, 0, 2*pi);
+    G4LogicalVolume* magnetLogic = new G4LogicalVolume(magnet, MaterialMap["Air"], "MagnetLogic");
+    G4VPhysicalVolume* magnetPhys = new G4PVPlacement(0, G4ThreeVector(0, 0, -250*cm), magnetLogic, "MagnetPhys", worldLogic, false, 0);
+
+    // Magnetic Field
+    G4UniformMagField* magField = new G4UniformMagField(G4ThreeVector(0., 7500*gauss, 0));
+    G4FieldManager* fieldMgr = new G4FieldManager(magField);
+    fieldMgr->CreateChordFinder(magField);
+    magnetLogic->SetFieldManager(fieldMgr, false);
+
+    // PDM Detector
     G4Box* mylarSheet = new G4Box("MylarSheet", 12.5*cm, 12.5*cm, 0.0125*mm);
     G4LogicalVolume* mylarLogic = new G4LogicalVolume(mylarSheet, MaterialMap["Mylar"], "MylarLogic");
 
@@ -46,12 +59,12 @@ G4VPhysicalVolume* GEMDetectorConstruction::Construct()
         G4VPhysicalVolume* mylarPhys = new G4PVPlacement(0, offset, mylarLogic, "MylarPhys", worldLogic, false, 0);
     }
 
- // Aperture
+    // Aperture
     G4Tubs* aperture = new G4Tubs("Aperture", 2.5*cm, 50*cm, 3.25*cm, 0, 2*pi);
     G4LogicalVolume* apertureLogic = new G4LogicalVolume(aperture, MaterialMap["Brass"], "ApertureLogic");
     G4VPhysicalVolume* aperturePhys = new G4PVPlacement(0, G4ThreeVector(0, 0, -30*cm-3.25*cm), apertureLogic, "AperturePhys", worldLogic, false, 0);
 
- // Phantom
+    // Phantom
     G4Box* phantom = new G4Box("Phantom", 15*cm, 15*cm, 11*cm);
     G4LogicalVolume* phantomLogic = new G4LogicalVolume(phantom, MaterialMap["Water"], "PhantomLogic");
     G4VPhysicalVolume* phantomPhys = new G4PVPlacement(0, G4ThreeVector(0, 0, -11*cm), phantomLogic, "PhantomPhys", worldLogic, false, 0);
@@ -103,7 +116,7 @@ void GEMDetectorConstruction::InitializeMaterials()
     PMMA -> AddElement(H, 8);
     PMMA -> AddElement(C, 5);
     PMMA -> AddElement(O, 2);
-    MaterialMap["PMMA"] = PMMA;    
+    MaterialMap["PMMA"] = PMMA;
 
     G4Material* StainlessSteel = new G4Material("StainlessSteel", 8.06*g/cm3, 6);
     StainlessSteel->AddElement(C, 0.001);
