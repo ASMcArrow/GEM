@@ -18,14 +18,15 @@ public:
 
     G4VPhysicalVolume* Construct();
 
- // void ConstructSDandField();
- // This method is used in multi-threaded applications to build
- // per-worker non-shared objects: SensitiveDetectors and Field managers
+    void ConstructSDandField();
+    // This method is used in multi-threaded applications to build
+    // per-worker non-shared objects: SensitiveDetectors and Field managers
 
 private:
     void InitializeMaterials();
 
     std::map <std::string, G4Material*> MaterialMap;
+    G4LogicalVolume* MagnetLogic;
 };
 
 #endif

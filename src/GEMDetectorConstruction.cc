@@ -40,14 +40,8 @@ G4VPhysicalVolume* GEMDetectorConstruction::Construct()
 
     // Scanning Magnet
     G4Tubs* magnet = new G4Tubs("Magnet", 0*cm, 2.54*cm, 25*cm, 0, 2*pi);
-    G4LogicalVolume* magnetLogic = new G4LogicalVolume(magnet, MaterialMap["Air"], "MagnetLogic");
-    G4VPhysicalVolume* magnetPhys = new G4PVPlacement(0, G4ThreeVector(0, 0, -250*cm), magnetLogic, "MagnetPhys", worldLogic, false, 0);
-
-    // Magnetic Field
-    G4UniformMagField* magField = new G4UniformMagField(G4ThreeVector(0., 7500*gauss, 0));
-    G4FieldManager* fieldMgr = new G4FieldManager(magField);
-    fieldMgr->CreateChordFinder(magField);
-    magnetLogic->SetFieldManager(fieldMgr, false);
+    MagnetLogic = new G4LogicalVolume(magnet, MaterialMap["Air"], "MagnetLogic");
+    G4VPhysicalVolume* magnetPhys = new G4PVPlacement(0, G4ThreeVector(0, 0, -250*cm), MagnetLogic, "MagnetPhys", worldLogic, false, 0);
 
     // PDM Detector
     G4Box* mylarSheet = new G4Box("MylarSheet", 12.5*cm, 12.5*cm, 0.0125*mm);
@@ -70,6 +64,15 @@ G4VPhysicalVolume* GEMDetectorConstruction::Construct()
     G4VPhysicalVolume* phantomPhys = new G4PVPlacement(0, G4ThreeVector(0, 0, -11*cm), phantomLogic, "PhantomPhys", worldLogic, false, 0);
 
     return worldPhys;
+}
+
+void GEMDetectorConstruction::ConstructSDandField()
+{
+    // Magnetic Field
+    G4UniformMagField* magField = new G4UniformMagField(G4ThreeVector(0., 7500*gauss, 0));
+    G4FieldManager* fieldMgr = new G4FieldManager(magField);
+    fieldMgr->CreateChordFinder(magField);
+    MagnetLogic->SetFieldManager(fieldMgr, false);
 }
 
 void GEMDetectorConstruction::InitializeMaterials()
