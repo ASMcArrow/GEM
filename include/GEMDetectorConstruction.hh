@@ -1,6 +1,8 @@
 #ifndef GEMDETECTORCONSTRUCTION_H
 #define GEMDETECTORCONSTRUCTION_H
 
+#include "GEMMagneticField.hh"
+
 #include "G4VUserDetectorConstruction.hh"
 #include "G4Material.hh"
 
@@ -27,6 +29,7 @@ private:
 
     std::map <std::string, G4Material*> MaterialMap;
     G4LogicalVolume* MagnetLogic;
+    static G4ThreadLocal GEMMagneticField* MagneticField;
 };
 
 #endif

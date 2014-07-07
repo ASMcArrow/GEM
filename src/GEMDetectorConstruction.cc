@@ -1,4 +1,5 @@
 #include "GEMDetectorConstruction.hh"
+#include "GEMMagneticField.hh"
 
 #include "G4Material.hh"
 #include "G4Box.hh"
@@ -18,6 +19,8 @@
 #include "G4FieldManager.hh"
 
 using namespace CLHEP;
+
+G4ThreadLocal GEMMagneticField* GEMDetectorConstruction::MagneticField = 0;
 
 G4VPhysicalVolume* GEMDetectorConstruction::Construct()
 {
@@ -69,9 +72,10 @@ G4VPhysicalVolume* GEMDetectorConstruction::Construct()
 void GEMDetectorConstruction::ConstructSDandField()
 {
     // Magnetic Field
-    G4UniformMagField* magField = new G4UniformMagField(G4ThreeVector(0., 7500*gauss, 0));
-    G4FieldManager* fieldMgr = new G4FieldManager(magField);
-    fieldMgr->CreateChordFinder(magField);
+    if(!MagneticField)
+        MagneticField = new GEMMagneticField();
+    G4FieldManager* fieldMgr = new G4FieldManager(MagneticField);
+    fieldMgr->CreateChordFinder(MagneticField);
     MagnetLogic->SetFieldManager(fieldMgr, false);
 }
 
