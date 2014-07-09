@@ -7,7 +7,7 @@
 #include "G4RunManager.hh"
 #include "G4SystemOfUnits.hh"
 
-GEMMagneticField::GEMMagneticField()
+GEMMagneticField::GEMMagneticField():G4UniformMagField(G4ThreeVector(0., 0., 0.))
 {
     Messenger = new GEMFieldMessenger(this);
     SetFieldValue(G4ThreeVector(0.,0.,0.));
@@ -18,23 +18,20 @@ GEMMagneticField::~GEMMagneticField()
     delete Messenger;
 }
 
-/*void GEMMagneticField::GetFieldValue(const G4double, G4double *Bfield) const
+void GEMMagneticField::GetFieldValue(const G4double [4], G4double *Bfield) const
 {
     Bfield[0] = fieldVal.x();
     Bfield[1] = fieldVal.y();
     Bfield[2] = fieldVal.z();
-}*/
+}
 
-void GEMMagneticField::SetFieldValue(G4ThreeVector fVal)
+void GEMMagneticField::SetFieldValue(const G4ThreeVector &newFieldValue)
 {
-    fieldVal = fVal;
+    fieldVal = newFieldValue;
 
-/*#ifdef G4MULTITHREADED
+#ifndef G4MULTITHREADED
     G4MTRunManager::GetMasterRunManager()->GeometryHasBeenModified(true);
 #else
-    G4RunManager::GetRunManager()->GeometryHasBeenModified(true);
-#endif*/
-    /* G4FieldManager* fMan = G4TransportationManager::GetTransportationManager()->GetFieldManager();
-    fMan->SetDetectorField(this);
-    fMan->CreateChordFinder(this); */
+    G4RunManager::GetRunManager()->ReinitializeGeometry();
+#endif
 }

@@ -11,11 +11,11 @@ GEMFieldMessenger::GEMFieldMessenger(GEMMagneticField* field):MagneticField(fiel
     GEMDir = new G4UIdirectory("/GEM/");
     GEMDir->SetGuidance("Directory for commands related to GEM setup");
 
-    SetMagFieldCmd = new G4UIcmdWith3VectorAndUnit("/setMagField", this);
+    SetMagFieldCmd = new G4UIcmdWith3VectorAndUnit("/GEM/setMagField", this);
     SetMagFieldCmd->SetGuidance("Set the value of magnetic field inside the scanning magnet");
     SetMagFieldCmd->SetParameterName("X", "Y", "Z", false);
     SetMagFieldCmd->SetDefaultUnit("gauss");
-    SetMagFieldCmd -> AvailableForStates(G4State_Idle);
+    SetMagFieldCmd->AvailableForStates(G4State_Idle, G4State_PreInit);
 }
 
 GEMFieldMessenger::~GEMFieldMessenger()

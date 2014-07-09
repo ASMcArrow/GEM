@@ -20,7 +20,7 @@
 
 using namespace CLHEP;
 
-G4ThreadLocal GEMMagneticField* GEMDetectorConstruction::MagneticField = 0;
+/*G4ThreadLocal*/ GEMMagneticField* GEMDetectorConstruction::MagneticField = 0;
 
 G4VPhysicalVolume* GEMDetectorConstruction::Construct()
 {
@@ -74,6 +74,7 @@ void GEMDetectorConstruction::ConstructSDandField()
     // Magnetic Field
     if(!MagneticField)
         MagneticField = new GEMMagneticField();
+    // MagneticField->SetFieldValue(G4ThreeVector(0., 7500*gauss, 0));
     G4FieldManager* fieldMgr = new G4FieldManager(MagneticField);
     fieldMgr->CreateChordFinder(MagneticField);
     MagnetLogic->SetFieldManager(fieldMgr, false);

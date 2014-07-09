@@ -1,11 +1,10 @@
 #ifndef GEMFIELDMESSENGER_HH
 #define GEMFIELDMESSENGER_HH
 
-#include "GEMMagneticField.hh"
-
 #include "G4UImessenger.hh"
 #include "globals.hh"
 
+class GEMMagneticField;
 class G4UIdirectory;
 class G4UIcmdWith3VectorAndUnit;
 class G4UIcmdWithoutParameter;

@@ -29,7 +29,7 @@ private:
 
     std::map <std::string, G4Material*> MaterialMap;
     G4LogicalVolume* MagnetLogic;
-    static G4ThreadLocal GEMMagneticField* MagneticField;
+  /* static G4ThreadLocal */  static GEMMagneticField* MagneticField;
 };
 
 #endif
