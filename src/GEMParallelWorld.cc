@@ -12,7 +12,11 @@
 
 GEMParallelWorld::GEMParallelWorld(G4String worldName)
     :G4VUserParallelWorld(worldName)
-{}
+{
+    G4SDManager* sDman = G4SDManager::GetSDMpointer();
+    sDetector = new GEMDetectorSD("MarkusDetector");
+    sDman->AddNewDetector(sDetector);
+}
 
 GEMParallelWorld::~GEMParallelWorld()
 {}
@@ -43,8 +47,8 @@ void GEMParallelWorld::Construct()
 
 void GEMParallelWorld::ConstructSD()
 {
-    G4SDManager* sDman = G4SDManager::GetSDMpointer();
-    G4VSensitiveDetector* sDetector = new GEMDetectorSD("MarkusDetector");
-    sDman->AddNewDetector(sDetector);
+  //  G4SDManager* sDman = G4SDManager::GetSDMpointer();
+ //   G4VSensitiveDetector* sDetector = new GEMDetectorSD("MarkusDetector");
+ //   sDman->AddNewDetector(sDetector);
     GhostZTubeLog->SetSensitiveDetector(sDetector);
 }

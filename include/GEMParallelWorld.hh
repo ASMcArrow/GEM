@@ -19,6 +19,8 @@ public:
 private:
     G4LogicalVolume *GhostTubeLog;
     G4LogicalVolume *GhostZTubeLog;
+
+    G4VSensitiveDetector* sDetector;
 };
 #endif
 

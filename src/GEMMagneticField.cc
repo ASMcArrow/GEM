@@ -30,7 +30,7 @@ void GEMMagneticField::SetFieldValue(const G4ThreeVector &newFieldValue)
     fieldVal = newFieldValue;
 
 #ifndef G4MULTITHREADED
-    G4MTRunManager::GetMasterRunManager()->GeometryHasBeenModified(true);
+    G4MTRunManager::GetMasterRunManager()->ReinitializeGeometry();
 #else
     G4RunManager::GetRunManager()->ReinitializeGeometry();
 #endif

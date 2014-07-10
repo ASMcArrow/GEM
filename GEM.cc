@@ -25,7 +25,7 @@
 int main(int argc,char** argv)
 {
 
- // Set the custom seed for the random engine
+    // Set the custom seed for the random engine
     G4Random::setTheEngine(new CLHEP::RanecuEngine);
     G4long seed = time(NULL);
     G4Random::setTheSeed(seed);
@@ -49,38 +49,36 @@ int main(int argc,char** argv)
 
     runManager->Initialize();
 
-#ifdef G4VIS_USE
-    G4VisManager* visManager = new G4VisExecutive;
-    visManager->Initialize();
-#endif
-
     G4UImanager* UImanager = G4UImanager::GetUIpointer();
 
     if (argc!=1)
     {
-    // batch mode
+        // batch mode
         G4String command = "/control/execute ";
         G4String fileName = argv[1];
         UImanager->ApplyCommand(command+fileName);
     }
     else
     {
-    // interactive mode : define UI session
-#ifdef G4UI_USE
-       G4UIExecutive* ui = new G4UIExecutive(argc, argv);
-#ifdef G4VIS_USE
-       UImanager->ApplyCommand("/control/execute init_vis.mac");
-#else
-       UImanager->ApplyCommand("/control/execute init.mac");
-#endif
-       ui->SessionStart();
-       delete ui;
-#endif
+        G4ThreeVector magField(0,0,0);
+        for (G4int i = 0; i < 10; i++)
+        {
+            for (G4int j = 0 ; j < 10; j++)
+            {
+                magField.setX((G4double)i*(1500/10)-750);
+                magField.setY((G4double)j*(1500/10)-750);
+                std::stringstream X;
+                X << magField.getX();
+                G4String strX = X.str();
+                std::stringstream Y;
+                Y << magField.getY();
+                G4String strY = Y.str();
+                UImanager->ApplyCommand("/GEM/setMagField "+strX+" "+strY+" 0");
+                UImanager->ApplyCommand("/run/beamOn 1000");
+            }
+        }
     }
 
-#ifdef G4VIS_USE
-    delete visManager;
-#endif
     delete runManager;
     return 0;
 }
