@@ -10,7 +10,7 @@
 GEMMagneticField::GEMMagneticField():G4UniformMagField(G4ThreeVector(0., 0., 0.))
 {
     Messenger = new GEMFieldMessenger(this);
-    SetFieldValue(G4ThreeVector(0.,0.,0.));
+    fieldVal = G4ThreeVector(0., 0., 0.);
 }
 
 GEMMagneticField::~GEMMagneticField()
@@ -29,9 +29,9 @@ void GEMMagneticField::SetFieldValue(const G4ThreeVector &newFieldValue)
 {
     fieldVal = newFieldValue;
 
-#ifndef G4MULTITHREADED
-    G4MTRunManager::GetMasterRunManager()->ReinitializeGeometry();
+/*#ifndef G4MULTITHREADED
+    G4MTRunManager::GetMasterRunManager()->GeometryHasBeenModified();
 #else
-    G4RunManager::GetRunManager()->ReinitializeGeometry();
-#endif
+    G4RunManager::GetRunManager()->GeometryHasBeenModified();
+#endif*/
 }

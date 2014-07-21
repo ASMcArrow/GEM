@@ -22,6 +22,7 @@ public:
 private:
     G4String DetectorName;
     G4double Cells[100];
+    G4int scan;
 };
 
 #endif

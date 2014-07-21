@@ -11,7 +11,11 @@ class GEMParallelWorld : public G4VUserParallelWorld
 {
 public:
     GEMParallelWorld(G4String worldName);
-    virtual ~GEMParallelWorld();
+    virtual ~GEMParallelWorld()
+{
+        if (sDetector != NULL)
+            delete sDetector;
+    }
 
     virtual void Construct();
     virtual void ConstructSD();
