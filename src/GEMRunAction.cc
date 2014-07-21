@@ -38,12 +38,10 @@ void GEMRunAction::BeginOfRunAction(const G4Run* aRun)
     G4cout << "### Run " << aRun->GetRunID() << " start." << G4endl;
 
     G4ThreeVector magField(0,0,0);
-    G4int i = 0, j = 0;
-    magField.setX((G4double)scan*200);
-    magField.setY((G4double)scan*200);
+    magField.setX((G4double)scan*(1500/10)-750);
+    magField.setY((G4double)scan*(1500/10)-750);
     magField.setZ(0);
     scan++;
-   // j++;
     GEMDetectorConstruction::MagneticField->SetFieldValue(magField*gauss);
 
 #ifndef G4MULTITHREADED
