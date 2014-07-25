@@ -15,18 +15,33 @@ public:
     GEMRun(const G4String detectorName1, const G4String detectorName2, G4bool verbose);
     virtual ~GEMRun();
 
- // virtual method from G4Run.
- // The method is overriden in this class for scoring.
+    // virtual method from G4Run.
+    // The method is overriden in this class for scoring.
     virtual void RecordEvent(const G4Event*);
     virtual void Merge(const G4Run*);
 
-    G4int GetNumberOfHits() const { return HitVector.size();}
-    GEMDetectorHit* GetHit(G4int i) {return HitVector[i];}
+    inline G4int GetNumberOfHits(G4String detectorName) const
+    {
+        if (detectorName == "DepthDetector")
+            return HitVector1.size();
+        else if (detectorName == "ProfileDetector")
+            return HitVector2.size();
+    }
+
+    inline GEMDetectorHit* GetHit(G4String detectorName, G4int i)
+    {
+        if (detectorName  == "DepthDetector")
+            return HitVector1[i];
+        else if (detectorName == "ProfileDetector")
+            return HitVector2[i];
+    }
 
 private:
+    void AddHitToVector(GEMDetectorHitsCollection* HC, std::vector<GEMDetectorHit *> *vector);
+
     G4String CollName1, CollName2;
     G4int CollectionID1, CollectionID2;
-    std::vector<GEMDetectorHit*> HitVector;
+    std::vector<GEMDetectorHit*> HitVector1, HitVector2;
     G4bool Verbose;
 };
 

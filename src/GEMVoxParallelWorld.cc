@@ -25,7 +25,7 @@ void GEMVoxParallelWorld::Construct()
 
     // Place volumes in the parallel world here
     G4double detHalfDimension = 15.0*cm;
-    G4double nDivisions = 5.0;
+    G4double nDivisions = 100.0;
     G4double halfBoxWidth = (detHalfDimension/nDivisions);
 
     G4Box *ghostDetector = new G4Box("GhostDetectorBox", detHalfDimension, detHalfDimension, 1*cm);

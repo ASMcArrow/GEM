@@ -19,6 +19,7 @@ public:
 private:
     G4String DepthDetectorName, ProfileDetectorName;
     G4double Cells[100][100];
+    G4double Depth[100];
     G4int ScanVertical, ScanHorizontal;
 };
 
