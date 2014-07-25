@@ -11,11 +11,11 @@ GEMActionInitialization::~GEMActionInitialization()
 
 void GEMActionInitialization::BuildForMaster() const
 {
-    SetUserAction(new GEMRunAction("MarkusDetector"));
+    SetUserAction(new GEMRunAction("DepthDetector", "ProfileDetector"));
 }
 
 void GEMActionInitialization::Build() const
 {
     SetUserAction(new GEMPrimaryGeneratorAction);
-    SetUserAction(new GEMRunAction("MarkusDetector"));
+    SetUserAction(new GEMRunAction("DepthDetector", "ProfileDetector"));
 }

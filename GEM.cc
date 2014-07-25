@@ -20,6 +20,7 @@
 #include "GEMDetectorConstruction.hh"
 #include "GEMPrimaryGeneratorAction.hh"
 #include "GEMActionInitialization.hh"
+#include "GEMVoxParallelWorld.hh"
 #include "GEMParallelWorld.hh"
 
 int main(int argc,char** argv)
@@ -39,6 +40,7 @@ int main(int argc,char** argv)
 
     GEMDetectorConstruction* massWorld = new GEMDetectorConstruction;
     massWorld->RegisterParallelWorld(new GEMParallelWorld("GEMParallelWorld"));
+    massWorld->RegisterParallelWorld(new GEMVoxParallelWorld("GEMVoxParallelWorld"));
     runManager->SetUserInitialization(massWorld);
 
     G4VModularPhysicsList* physicsList = new GEMPhysicsList;
@@ -49,12 +51,12 @@ int main(int argc,char** argv)
 
     runManager->Initialize();
 
-    for (G4int i = 0 ; i < 10; i++)
+    for (G4int i = 0 ; i < 100; i++)
     {
-        runManager->BeamOn(10000);
+        runManager->BeamOn(100);
     }
 
-    /*#ifdef G4VIS_USE
+   /* #ifdef G4VIS_USE
     G4VisManager* visManager = new G4VisExecutive;
     visManager->Initialize();
 #endif

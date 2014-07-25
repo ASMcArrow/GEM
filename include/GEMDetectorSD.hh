@@ -13,7 +13,7 @@ class GEMDetectorSD : public G4VSensitiveDetector
 {
 
 public:
-  GEMDetectorSD(G4String name);
+  GEMDetectorSD(G4String name, G4String collname);
   ~GEMDetectorSD();
 
   void Initialize(G4HCofThisEvent* ); 

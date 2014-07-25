@@ -33,7 +33,7 @@ void GEMParallelWorld::Construct()
  // Tube in the centre of the phantom
     G4Tubs *ghostTube = new G4Tubs("ghostTube", 0, detectorR, 11*cm, 0, 2*pi);
     GhostTubeLog = new G4LogicalVolume(ghostTube, 0, "GhostTubeLog");
-    new G4PVPlacement(0, G4ThreeVector(0, 0, -11*cm), GhostTubeLog, "GhostTubePhys", worldLog, 0, 0);
+    new G4PVPlacement(0, G4ThreeVector(0, 0, 0), GhostTubeLog, "GhostTubePhys", worldLog, 0, 0);
 
     G4VisAttributes* visAttributes = new G4VisAttributes;
     visAttributes->SetColor(0,0,1);
@@ -47,11 +47,8 @@ void GEMParallelWorld::Construct()
 
 void GEMParallelWorld::ConstructSD()
 {
-   // if (sDetector == NULL)
-  //  {
     G4SDManager* sDman = G4SDManager::GetSDMpointer();
-    sDetector = new GEMDetectorSD("MarkusDetector");
+    sDetector = new GEMDetectorSD("DepthDetector", "DepthHitsCollection");
     sDman->AddNewDetector(sDetector);
     GhostZTubeLog->SetSensitiveDetector(sDetector);
-  //  }
 }

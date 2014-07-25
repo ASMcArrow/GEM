@@ -53,18 +53,26 @@ void GEMPhysicsList::ConstructProcess()
 
 void GEMPhysicsList::AddParallelScoring()
 {
-    G4ParallelWorldScoringProcess* theParallelWorldScoringProcess
-            = new G4ParallelWorldScoringProcess("ParaWorldScoringProc");
-    theParallelWorldScoringProcess->SetParallelWorld("GEMParallelWorld");
+    G4ParallelWorldScoringProcess* theParallelWorldScoringProcessDepth
+            = new G4ParallelWorldScoringProcess("ParaWorldScoringProcDepth");
+    theParallelWorldScoringProcessDepth->SetParallelWorld("GEMParallelWorld");
+
+    G4ParallelWorldScoringProcess* theParallelWorldScoringProcessProfile
+            = new G4ParallelWorldScoringProcess("ParaWorldScoringProcProfile");
+    theParallelWorldScoringProcessProfile->SetParallelWorld("GEMVoxParallelWorld");
 
     theParticleIterator->reset();
     while((*theParticleIterator)())
     {
         G4ProcessManager* pmanager = theParticleIterator->value()->GetProcessManager();
-        pmanager->AddProcess(theParallelWorldScoringProcess);
-        pmanager->SetProcessOrderingToLast(theParallelWorldScoringProcess, idxAtRest);
-        pmanager->SetProcessOrdering(theParallelWorldScoringProcess, idxAlongStep, 1);
-        pmanager->SetProcessOrderingToLast(theParallelWorldScoringProcess, idxPostStep);
+        pmanager->AddProcess(theParallelWorldScoringProcessDepth);
+        pmanager->AddProcess(theParallelWorldScoringProcessProfile);
+        pmanager->SetProcessOrderingToLast(theParallelWorldScoringProcessDepth, idxAtRest);
+        pmanager->SetProcessOrderingToLast(theParallelWorldScoringProcessProfile, idxAtRest);
+        pmanager->SetProcessOrdering(theParallelWorldScoringProcessDepth, idxAlongStep, 1);
+        pmanager->SetProcessOrdering(theParallelWorldScoringProcessProfile, idxAlongStep, 1);
+        pmanager->SetProcessOrderingToLast(theParallelWorldScoringProcessDepth, idxPostStep);
+        pmanager->SetProcessOrderingToLast(theParallelWorldScoringProcessProfile, idxPostStep);
     }
 }
 

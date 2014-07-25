@@ -12,7 +12,7 @@ class GEMRun : public G4Run
 {
 
 public:
-    GEMRun(const G4String detectorName, G4bool verbose);
+    GEMRun(const G4String detectorName1, const G4String detectorName2, G4bool verbose);
     virtual ~GEMRun();
 
  // virtual method from G4Run.
@@ -24,8 +24,8 @@ public:
     GEMDetectorHit* GetHit(G4int i) {return HitVector[i];}
 
 private:
-    G4String CollName;
-    G4int CollectionID;
+    G4String CollName1, CollName2;
+    G4int CollectionID1, CollectionID2;
     std::vector<GEMDetectorHit*> HitVector;
     G4bool Verbose;
 };

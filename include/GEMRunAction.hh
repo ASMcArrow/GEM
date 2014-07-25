@@ -9,20 +9,17 @@ class GEMRunAction : public G4UserRunAction
 {
 public:
 
-    GEMRunAction(const G4String detectorName);
+    GEMRunAction(const G4String detectorName1, const G4String detectorName2);
     virtual ~GEMRunAction();
 
     virtual G4Run* GenerateRun();
     virtual void BeginOfRunAction(const G4Run*);
     virtual void EndOfRunAction(const G4Run*);
 
-    G4double* GetCells()
-    { return Cells; }
-
 private:
-    G4String DetectorName;
-    G4double Cells[100];
-    G4int scan;
+    G4String DepthDetectorName, ProfileDetectorName;
+    G4double Cells[100][100];
+    G4int ScanVertical, ScanHorizontal;
 };
 
 #endif

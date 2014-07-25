@@ -9,11 +9,11 @@
 
 #include <cstdio>
 
-GEMDetectorSD::GEMDetectorSD(G4String name):
+GEMDetectorSD::GEMDetectorSD(G4String name, G4String collname):
     G4VSensitiveDetector(name)
 { 
     G4String HCname;
-    collectionName.insert(HCname="GEMDetectorHitsCollection");
+    collectionName.insert(HCname = collname);
     HitsCollection = NULL;
     SensitiveDetectorName = name;
 }
@@ -35,14 +35,16 @@ GEMDetectorSD::ProcessHits(G4Step* aStep, G4TouchableHistory* obsolete)
     G4TouchableHistory* touchable = (G4TouchableHistory*)(preStep->GetTouchable());
 
     G4int i = touchable->GetReplicaNumber(0);
+    G4int j = touchable->GetReplicaNumber(1);
     G4double energyDeposit = aStep->GetTotalEnergyDeposit();
 
     if(energyDeposit != 0)
 	{
         GEMDetectorHit* detectorHit = new GEMDetectorHit();
         detectorHit->SetEdep(energyDeposit);
-        detectorHit->SetPos(G4ThreeVector(i, 0, 0));
+        detectorHit->SetPos(G4ThreeVector(i, j, 0));
         HitsCollection->insert(detectorHit);
+        G4cout << "Hit! " << SensitiveDetectorName << G4endl;
 
         return true;
     }

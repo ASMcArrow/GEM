@@ -1,13 +1,16 @@
 #include "GEMRun.hh"
 #include "G4SDManager.hh"
 
-GEMRun::GEMRun(const G4String detectorName, G4bool verbose) : G4Run()
+GEMRun::GEMRun(const G4String detectorName1, const G4String detectorName2, G4bool verbose) : G4Run()
 {
     G4SDManager* SDman = G4SDManager::GetSDMpointer();
-    G4VSensitiveDetector* detector = SDman->FindSensitiveDetector(detectorName);
+    G4VSensitiveDetector* detector1 = SDman->FindSensitiveDetector(detectorName1);\
+    G4VSensitiveDetector* detector2 = SDman->FindSensitiveDetector(detectorName2);
 
-    CollName = detector->GetCollectionName(0);
-    CollectionID = SDman->GetCollectionID(CollName);
+    CollName1 = detector1->GetCollectionName(0);
+    CollName2 = detector2->GetCollectionName(0);
+    CollectionID1 = SDman->GetCollectionID(CollName1);
+    CollectionID2 = SDman->GetCollectionID(CollName2);
     Verbose = verbose;
 }
 
@@ -23,7 +26,7 @@ void GEMRun::RecordEvent(const G4Event* aEvent)
     G4HCofThisEvent* HCE = aEvent->GetHCofThisEvent();
     if(HCE!=NULL)
     {
-        GEMDetectorHitsCollection* HC = (GEMDetectorHitsCollection*)(HCE -> GetHC(CollectionID));
+        GEMDetectorHitsCollection* HC = (GEMDetectorHitsCollection*)(HCE -> GetHC(CollectionID2));
         if(HC!=NULL)
         {
             //GEMDetectorHit *hit = 0;

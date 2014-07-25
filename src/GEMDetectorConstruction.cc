@@ -64,7 +64,7 @@ G4VPhysicalVolume* GEMDetectorConstruction::Construct()
     // Phantom
     G4Box* phantom = new G4Box("Phantom", 15*cm, 15*cm, 11*cm);
     G4LogicalVolume* phantomLogic = new G4LogicalVolume(phantom, MaterialMap["Water"], "PhantomLogic");
-    G4VPhysicalVolume* phantomPhys = new G4PVPlacement(0, G4ThreeVector(0, 0, -11*cm), phantomLogic, "PhantomPhys", worldLogic, false, 0);
+    G4VPhysicalVolume* phantomPhys = new G4PVPlacement(0, G4ThreeVector(0, 0, 0), phantomLogic, "PhantomPhys", worldLogic, false, 0);
 
     return worldPhys;
 }
