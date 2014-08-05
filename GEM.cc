@@ -22,6 +22,7 @@
 #include "GEMActionInitialization.hh"
 #include "GEMVoxParallelWorld.hh"
 #include "GEMParallelWorld.hh"
+#include "G4Navigator.hh"
 
 int main(int argc,char** argv)
 {
@@ -53,10 +54,10 @@ int main(int argc,char** argv)
 
     for (G4int i = 0 ; i < 100; i++)
     {
-        runManager->BeamOn(100);
+        runManager->BeamOn(1000);
     }
 
-   /* #ifdef G4VIS_USE
+    /*#ifdef G4VIS_USE
     G4VisManager* visManager = new G4VisExecutive;
     visManager->Initialize();
 #endif

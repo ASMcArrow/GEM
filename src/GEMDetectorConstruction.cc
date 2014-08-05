@@ -42,7 +42,10 @@ G4VPhysicalVolume* GEMDetectorConstruction::Construct()
     worldLogic->SetVisAttributes(visAttributes);
 
     // Scanning Magnet
-    G4Tubs* magnet = new G4Tubs("Magnet", 0*cm, 2.54*cm, 25*cm, 0, 2*pi);
+    /*G4Box* magnet = new G4Box("Magnet", 2.54*cm, 2.54*cm, 25*cm);
+    MagnetLogic = new G4LogicalVolume(magnet, MaterialMap["Air"], "MagnetLogic");
+    G4VPhysicalVolume* magnetPhys = new G4PVPlacement(0, G4ThreeVector(0, 0, -250*cm), MagnetLogic, "MagnetPhys", worldLogic, false, 0);*/
+    G4Tubs* magnet = new G4Tubs("Magnet", 0*cm, 2.54*cm, 25*cm, 0, CLHEP::twopi);
     MagnetLogic = new G4LogicalVolume(magnet, MaterialMap["Air"], "MagnetLogic");
     G4VPhysicalVolume* magnetPhys = new G4PVPlacement(0, G4ThreeVector(0, 0, -250*cm), MagnetLogic, "MagnetPhys", worldLogic, false, 0);
 

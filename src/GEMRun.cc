@@ -1,16 +1,21 @@
 #include "GEMRun.hh"
 #include "G4SDManager.hh"
 
-GEMRun::GEMRun(const G4String detectorName1, const G4String detectorName2, G4bool verbose) : G4Run()
+GEMRun::GEMRun(const G4String detectorName1, const G4String detectorName2, const G4String detectorName3, G4bool verbose) : G4Run()
 {
     G4SDManager* SDman = G4SDManager::GetSDMpointer();
-    G4VSensitiveDetector* detector1 = SDman->FindSensitiveDetector(detectorName1);\
+    G4VSensitiveDetector* detector1 = SDman->FindSensitiveDetector(detectorName1);
     G4VSensitiveDetector* detector2 = SDman->FindSensitiveDetector(detectorName2);
+    G4VSensitiveDetector* detector3 = SDman->FindSensitiveDetector(detectorName3);
 
     CollName1 = detector1->GetCollectionName(0);
     CollName2 = detector2->GetCollectionName(0);
+    CollName3 = detector3->GetCollectionName(0);
+
     CollectionID1 = SDman->GetCollectionID(CollName1);
     CollectionID2 = SDman->GetCollectionID(CollName2);
+    CollectionID3 = SDman->GetCollectionID(CollName3);
+
     Verbose = verbose;
 }
 
@@ -18,6 +23,7 @@ GEMRun::~GEMRun()
 {
     HitVector1.clear();
     HitVector2.clear();
+    HitVector3.clear();
 }
 
 void GEMRun::RecordEvent(const G4Event* aEvent)
@@ -28,7 +34,7 @@ void GEMRun::RecordEvent(const G4Event* aEvent)
     if(HCE!=NULL)
     {
         GEMDetectorHitsCollection* HC1 = (GEMDetectorHitsCollection*)(HCE -> GetHC(CollectionID1));
-        G4int num = HC1->entries();
+        G4int num1 = HC1->entries();
         if(HC1!=NULL)
         {
             if (Verbose) G4cout << CollectionID1 << G4endl;
@@ -36,11 +42,20 @@ void GEMRun::RecordEvent(const G4Event* aEvent)
         }
 
         GEMDetectorHitsCollection* HC2 = (GEMDetectorHitsCollection*)(HCE -> GetHC(CollectionID2));
-        G4int num1 = HC1->entries();
+        G4int num2 = HC2->entries();
         if(HC2!=NULL)
         {
             if (Verbose) G4cout << CollectionID2 << G4endl;
             this->AddHitToVector(HC2, &HitVector2);
+        }
+
+
+        GEMDetectorHitsCollection* HC3 = (GEMDetectorHitsCollection*)(HCE -> GetHC(CollectionID3));
+        G4int num3 = HC3->entries();
+        if(HC3!=NULL)
+        {
+            if (Verbose) G4cout << CollectionID3 << G4endl;
+            this->AddHitToVector(HC3, &HitVector3);
         }
     }
 }
@@ -79,6 +94,8 @@ void GEMRun::Merge(const G4Run * aRun)
         HitVector1.push_back(localRun -> HitVector1[i]);
     for (G4int j = 0; j < localRun -> HitVector2.size(); j++)
         HitVector2.push_back(localRun -> HitVector2[j]);
+    for (G4int k = 0; k < localRun -> HitVector3.size(); k++)
+        HitVector3.push_back(localRun -> HitVector3[k]);
 
     G4Run::Merge(aRun);
 }
