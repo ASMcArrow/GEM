@@ -44,7 +44,6 @@ GEMDetectorSD::ProcessHits(G4Step* aStep, G4TouchableHistory* obsolete)
         detectorHit->SetEdep(energyDeposit);
         detectorHit->SetPos(G4ThreeVector(i, j, 0));
         HitsCollection->insert(detectorHit);
-        G4int num0 = HitsCollection->entries();
 
         return true;
     }
@@ -56,7 +55,6 @@ void
 GEMDetectorSD::EndOfEvent(G4HCofThisEvent* HCE)
 {
     int HCID = GetCollectionID(0);
-    G4int num = HitsCollection->entries();
     HCE->AddHitsCollection(HCID, HitsCollection);
 }
 

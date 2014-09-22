@@ -10,9 +10,10 @@ using namespace CLHEP;
 class GEMParallelWorld : public G4VUserParallelWorld
 {
 public:
+
     GEMParallelWorld(G4String worldName);
     virtual ~GEMParallelWorld()
-{
+    {
         if (sDetector != NULL)
             delete sDetector;
     }

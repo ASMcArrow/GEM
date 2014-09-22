@@ -47,7 +47,7 @@ GEMPhysicsList::~GEMPhysicsList()
 
 void GEMPhysicsList::ConstructProcess()
 {
-    AddParallelScoring();
+   // AddParallelScoring();
     G4VModularPhysicsList::ConstructProcess();
 }
 

@@ -25,9 +25,15 @@ public:
         if (detectorName == "DepthDetector")
             return HitVector1.size();
         else if (detectorName == "ProfileDetectorZero")
+        {
+            G4cout << "ProfileDetectorZero in GEMRun: Number of hits " << HitVector2.size() << G4endl;
             return HitVector2.size();
+        }
         else if (detectorName == "ProfileDetectorPeak")
+        {
+            G4cout << "ProfileDetectorPeak in GEMRun: Number of hits " << HitVector3.size() << G4endl;
             return HitVector3.size();
+        }
     }
 
     inline GEMDetectorHit* GetHit(G4String detectorName, G4int i)

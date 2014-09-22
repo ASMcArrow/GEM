@@ -34,7 +34,6 @@ void GEMRun::RecordEvent(const G4Event* aEvent)
     if(HCE!=NULL)
     {
         GEMDetectorHitsCollection* HC1 = (GEMDetectorHitsCollection*)(HCE -> GetHC(CollectionID1));
-        G4int num1 = HC1->entries();
         if(HC1!=NULL)
         {
             if (Verbose) G4cout << CollectionID1 << G4endl;
@@ -42,7 +41,6 @@ void GEMRun::RecordEvent(const G4Event* aEvent)
         }
 
         GEMDetectorHitsCollection* HC2 = (GEMDetectorHitsCollection*)(HCE -> GetHC(CollectionID2));
-        G4int num2 = HC2->entries();
         if(HC2!=NULL)
         {
             if (Verbose) G4cout << CollectionID2 << G4endl;
@@ -51,7 +49,6 @@ void GEMRun::RecordEvent(const G4Event* aEvent)
 
 
         GEMDetectorHitsCollection* HC3 = (GEMDetectorHitsCollection*)(HCE -> GetHC(CollectionID3));
-        G4int num3 = HC3->entries();
         if(HC3!=NULL)
         {
             if (Verbose) G4cout << CollectionID3 << G4endl;
@@ -74,7 +71,7 @@ void GEMRun::AddHitToVector(GEMDetectorHitsCollection *HC, std::vector<GEMDetect
         vector->push_back((GEMDetectorHit*)(copyHit));
     }
 
-   /* if (HC->entries() != 0)
+    /* if (HC->entries() != 0)
     {
         if(Verbose)
         {

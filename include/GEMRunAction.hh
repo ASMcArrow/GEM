@@ -22,7 +22,7 @@ private:
     void DumpProfile(G4String type, GEMRun *gemRun);
 
     G4String DepthDetectorName, ProfileDetectorName1, ProfileDetectorName2;
-    G4double Cells1[100][100], Cells2[100][100];
+    G4double Cells1[100][100], Cells2[100][100], Cells3[100][100];
     G4double Depth[100];
     G4int ScanVertical, ScanHorizontal;
 };

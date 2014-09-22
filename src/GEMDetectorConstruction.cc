@@ -1,5 +1,6 @@
 #include "GEMDetectorConstruction.hh"
 #include "GEMMagneticField.hh"
+#include "GEMDetectorSD.hh"
 
 #include "G4Material.hh"
 #include "G4Box.hh"
@@ -17,10 +18,14 @@
 #include "G4VSolid.hh"
 #include "G4UniformMagField.hh"
 #include "G4FieldManager.hh"
+#include "G4TransportationManager.hh"
+#include "G4Navigator.hh"
+#include "G4PropagatorInField.hh"
+#include "G4SDManager.hh"
 
 using namespace CLHEP;
 
-/*G4ThreadLocal*/ GEMMagneticField* GEMDetectorConstruction::MagneticField = 0;
+G4ThreadLocal GEMMagneticField* GEMDetectorConstruction::MagneticField = 0;
 
 G4VPhysicalVolume* GEMDetectorConstruction::Construct()
 {
@@ -42,12 +47,12 @@ G4VPhysicalVolume* GEMDetectorConstruction::Construct()
     worldLogic->SetVisAttributes(visAttributes);
 
     // Scanning Magnet
-    /*G4Box* magnet = new G4Box("Magnet", 2.54*cm, 2.54*cm, 25*cm);
-    MagnetLogic = new G4LogicalVolume(magnet, MaterialMap["Air"], "MagnetLogic");
-    G4VPhysicalVolume* magnetPhys = new G4PVPlacement(0, G4ThreeVector(0, 0, -250*cm), MagnetLogic, "MagnetPhys", worldLogic, false, 0);*/
-    G4Tubs* magnet = new G4Tubs("Magnet", 0*cm, 2.54*cm, 25*cm, 0, CLHEP::twopi);
+    G4Box* magnet = new G4Box("Magnet", 2.54*cm, 2.54*cm, 25*cm);
     MagnetLogic = new G4LogicalVolume(magnet, MaterialMap["Air"], "MagnetLogic");
     G4VPhysicalVolume* magnetPhys = new G4PVPlacement(0, G4ThreeVector(0, 0, -250*cm), MagnetLogic, "MagnetPhys", worldLogic, false, 0);
+    /*G4Tubs* magnet = new G4Tubs("Magnet", 0*cm, 2.54*cm, 25*cm, 0, CLHEP::twopi);
+    MagnetLogic = new G4LogicalVolume(magnet, MaterialMap["Air"], "MagnetLogic");
+    G4VPhysicalVolume* magnetPhys = new G4PVPlacement(0, G4ThreeVector(0, 0, -250*cm), MagnetLogic, "MagnetPhys", worldLogic, false, 0);*/
 
     // PDM Detector
     G4Box* mylarSheet = new G4Box("MylarSheet", 12.5*cm, 12.5*cm, 0.0125*mm);
@@ -60,13 +65,13 @@ G4VPhysicalVolume* GEMDetectorConstruction::Construct()
     }
 
     // Aperture
-    G4Tubs* aperture = new G4Tubs("Aperture", 2.5*cm, 50*cm, 3.25*cm, 0, 2*pi);
+    /*G4Tubs* aperture = new G4Tubs("Aperture", 2.5*cm, 50*cm, 3.25*cm, 0, CLHEP::twopi);
     G4LogicalVolume* apertureLogic = new G4LogicalVolume(aperture, MaterialMap["Brass"], "ApertureLogic");
-    G4VPhysicalVolume* aperturePhys = new G4PVPlacement(0, G4ThreeVector(0, 0, -30*cm-3.25*cm), apertureLogic, "AperturePhys", worldLogic, false, 0);
+    G4VPhysicalVolume* aperturePhys = new G4PVPlacement(0, G4ThreeVector(0, 0, -30*cm-3.25*cm), apertureLogic, "AperturePhys", worldLogic, false, 0);*/
 
     // Phantom
     G4Box* phantom = new G4Box("Phantom", 15*cm, 15*cm, 11*cm);
-    G4LogicalVolume* phantomLogic = new G4LogicalVolume(phantom, MaterialMap["Water"], "PhantomLogic");
+    PhantomLogic = new G4LogicalVolume(phantom, MaterialMap["Water"], "PhantomLogic");
     G4VPhysicalVolume* phantomPhys = new G4PVPlacement(0, G4ThreeVector(0, 0, 0), phantomLogic, "PhantomPhys", worldLogic, false, 0);
 
     return worldPhys;
@@ -79,6 +84,12 @@ void GEMDetectorConstruction::ConstructSDandField()
     G4FieldManager* fieldMgr = new G4FieldManager(MagneticField);
     fieldMgr->CreateChordFinder(MagneticField);
     MagnetLogic->SetFieldManager(fieldMgr, false);
+  //  G4TransportationManager::GetTransportationManager()->SetFieldManager(fieldMgr);
+
+    G4SDManager* sDman = G4SDManager::GetSDMpointer();
+    sDetector = new GEMDetectorSD("DepthDetector", "DepthHitsCollection");
+    sDman->AddNewDetector(sDetector);
+    PhantomLogic->SetSensitiveDetector(sDetector);
 }
 
 void GEMDetectorConstruction::InitializeMaterials()

@@ -26,7 +26,7 @@ public:
     virtual void ConstructSD();
 
 private:
-    G4LogicalVolume *GhostYBoxZeroLog, *GhostYBoxPeakLog;
+    G4LogicalVolume *GhostYBoxZeroLog, *GhostYBoxPeakLog, *GhostDetectorZeroLog, *GhostDetectorPeakLog;
     G4VSensitiveDetector *ZeroDetector, *PeakDetector;
 };
 

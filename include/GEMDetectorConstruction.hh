@@ -23,13 +23,14 @@ public:
     void ConstructSDandField();
     // This method is used in multi-threaded applications to build
     // per-worker non-shared objects: SensitiveDetectors and Field managers
-    /* static G4ThreadLocal */  static GEMMagneticField* MagneticField;
+    static G4ThreadLocal GEMMagneticField* MagneticField;
 
 private:
     void InitializeMaterials();
 
     std::map <std::string, G4Material*> MaterialMap;
     G4LogicalVolume* MagnetLogic;
+    G4LogicalVolume* PhantomLogic;
 };
 
 #endif

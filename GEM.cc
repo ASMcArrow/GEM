@@ -23,10 +23,15 @@
 #include "GEMVoxParallelWorld.hh"
 #include "GEMParallelWorld.hh"
 #include "G4Navigator.hh"
+#include "G4GeometryTolerance.hh"
+#include "G4GeometryManager.hh"
+#include "G4TransportationManager.hh"
+#include "G4PropagatorInField.hh"
+#include "G4ExceptionHandler.hh"
+#include "G4StateManager.hh"
 
 int main(int argc,char** argv)
 {
-
     // Set the custom seed for the random engine
     G4Random::setTheEngine(new CLHEP::RanecuEngine);
     G4long seed = time(NULL);
@@ -34,14 +39,20 @@ int main(int argc,char** argv)
 
 #ifndef G4MULTITHREADED
     G4MTRunManager* runManager = new G4MTRunManager;
-    runManager->SetNumberOfThreads(1);
+    runManager->SetNumberOfThreads(8);
 #else
     G4RunManager* runManager = new G4RunManager;
 #endif
 
+    G4GeometryManager::GetInstance()->SetWorldMaximumExtent(4.0*m);
+
+    G4cout << "Computed tolerance = "
+    << G4GeometryTolerance::GetInstance()->GetSurfaceTolerance()/mm
+    << " mm" << G4endl;
+
     GEMDetectorConstruction* massWorld = new GEMDetectorConstruction;
-    massWorld->RegisterParallelWorld(new GEMParallelWorld("GEMParallelWorld"));
-    massWorld->RegisterParallelWorld(new GEMVoxParallelWorld("GEMVoxParallelWorld"));
+    //massWorld->RegisterParallelWorld(new GEMParallelWorld("GEMParallelWorld"));
+    //massWorld->RegisterParallelWorld(new GEMVoxParallelWorld("GEMVoxParallelWorld"));
     runManager->SetUserInitialization(massWorld);
 
     G4VModularPhysicsList* physicsList = new GEMPhysicsList;
@@ -52,9 +63,15 @@ int main(int argc,char** argv)
 
     runManager->Initialize();
 
+    G4Navigator* navigator = G4TransportationManager::GetTransportationManager()->GetNavigatorForTracking();
+    navigator->SetPushVerbosity(false);
+    runManager->SetVerboseLevel(0);
+
+    G4VExceptionHandler *handler = G4StateManager::GetStateManager()->GetExceptionHandler();
+
     for (G4int i = 0 ; i < 100; i++)
     {
-        runManager->BeamOn(1000);
+        runManager->BeamOn(1000000);
     }
 
     /*#ifdef G4VIS_USE

@@ -27,7 +27,7 @@ void GEMMagneticField::GetFieldValue(const G4double [4], G4double *Bfield) const
 
 void GEMMagneticField::SetFieldValue(const G4ThreeVector &newFieldValue)
 {
-    fieldVal = newFieldValue;
+    fieldVal = newFieldValue*gauss;
 
 /*#ifndef G4MULTITHREADED
     G4MTRunManager::GetMasterRunManager()->GeometryHasBeenModified();
