@@ -29,9 +29,9 @@ public:
             G4cout << "ProfileDetectorZero in GEMRun: Number of hits " << HitVector2.size() << G4endl;
             return HitVector2.size();
         }
-        else if (detectorName == "ProfileDetectorPeak")
+        else if (detectorName == "ProfileDetectorIso")
         {
-            G4cout << "ProfileDetectorPeak in GEMRun: Number of hits " << HitVector3.size() << G4endl;
+            G4cout << "ProfileDetectorIso in GEMRun: Number of hits " << HitVector3.size() << G4endl;
             return HitVector3.size();
         }
     }
@@ -42,7 +42,7 @@ public:
             return HitVector1[i];
         else if (detectorName == "ProfileDetectorZero")
             return HitVector2[i];
-        else if (detectorName == "ProfileDetectorPeak")
+        else if (detectorName == "ProfileDetectorIso")
             return HitVector3[i];
     }
 

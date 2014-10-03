@@ -12,14 +12,7 @@
 
 GEMParallelWorld::GEMParallelWorld(G4String worldName)
     :G4VUserParallelWorld(worldName)
-{
-   // G4SDManager* sDman = G4SDManager::GetSDMpointer();
-   // sDetector = new GEMDetectorSD("MarkusDetector");
-   // sDman->AddNewDetector(sDetector);
-}
-
-//GEMParallelWorld::~GEMParallelWorld()
-//{}
+{}
 
 void GEMParallelWorld::Construct()
 {
@@ -27,7 +20,7 @@ void GEMParallelWorld::Construct()
     G4LogicalVolume *worldLog = ghostWorld->GetLogicalVolume();
 
  // Place volumes in the parallel world here
-    G4double detectorR = 1*cm;
+    G4double detectorR = 5*cm;
     G4int nDivisions = 100;
 
  // Tube in the centre of the phantom

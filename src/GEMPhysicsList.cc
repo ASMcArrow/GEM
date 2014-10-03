@@ -25,21 +25,21 @@
 
 GEMPhysicsList::GEMPhysicsList() : G4VModularPhysicsList()
 {
-  G4LossTableManager::Instance();
-  defaultCutValue = 1.*mm;
-  cutForGamma     = defaultCutValue;
-  cutForElectron  = defaultCutValue;
-  cutForPositron  = defaultCutValue;
+    G4LossTableManager::Instance();
+    defaultCutValue = 1.*mm;
+    cutForGamma     = defaultCutValue;
+    cutForElectron  = defaultCutValue;
+    cutForPositron  = defaultCutValue;
 
-  SetVerboseLevel(1);
+    SetVerboseLevel(1);
 
-  RegisterPhysics(new G4EmStandardPhysics_option3);
-  RegisterPhysics(new G4HadronPhysicsQGSP_BIC);
-  RegisterPhysics(new G4EmExtraPhysics);
-  RegisterPhysics(new G4HadronElasticPhysics);
-  RegisterPhysics(new G4StoppingPhysics);
-  RegisterPhysics(new G4IonBinaryCascadePhysics);
-  RegisterPhysics(new G4NeutronTrackingCut);
+    RegisterPhysics(new G4EmStandardPhysics_option3);
+    RegisterPhysics(new G4HadronPhysicsQGSP_BIC);
+    RegisterPhysics(new G4EmExtraPhysics);
+    RegisterPhysics(new G4HadronElasticPhysics);
+    RegisterPhysics(new G4StoppingPhysics);
+    RegisterPhysics(new G4IonBinaryCascadePhysics);
+    RegisterPhysics(new G4NeutronTrackingCut);
 }
 
 GEMPhysicsList::~GEMPhysicsList()
@@ -47,15 +47,15 @@ GEMPhysicsList::~GEMPhysicsList()
 
 void GEMPhysicsList::ConstructProcess()
 {
-   // AddParallelScoring();
+    AddParallelScoring();
     G4VModularPhysicsList::ConstructProcess();
 }
 
 void GEMPhysicsList::AddParallelScoring()
 {
-    G4ParallelWorldScoringProcess* theParallelWorldScoringProcessDepth
-            = new G4ParallelWorldScoringProcess("ParaWorldScoringProcDepth");
-    theParallelWorldScoringProcessDepth->SetParallelWorld("GEMParallelWorld");
+//     G4ParallelWorldScoringProcess* theParallelWorldScoringProcessDepth
+//            = new G4ParallelWorldScoringProcess("ParaWorldScoringProcDepth");
+//    theParallelWorldScoringProcessDepth->SetParallelWorld("GEMParallelWorld");
 
     G4ParallelWorldScoringProcess* theParallelWorldScoringProcessProfile
             = new G4ParallelWorldScoringProcess("ParaWorldScoringProcProfile");
@@ -65,21 +65,21 @@ void GEMPhysicsList::AddParallelScoring()
     while((*theParticleIterator)())
     {
         G4ProcessManager* pmanager = theParticleIterator->value()->GetProcessManager();
-        pmanager->AddProcess(theParallelWorldScoringProcessDepth);
+//        pmanager->AddProcess(theParallelWorldScoringProcessDepth);
         pmanager->AddProcess(theParallelWorldScoringProcessProfile);
-        pmanager->SetProcessOrderingToLast(theParallelWorldScoringProcessDepth, idxAtRest);
+//        pmanager->SetProcessOrderingToLast(theParallelWorldScoringProcessDepth, idxAtRest);
         pmanager->SetProcessOrderingToLast(theParallelWorldScoringProcessProfile, idxAtRest);
-        pmanager->SetProcessOrdering(theParallelWorldScoringProcessDepth, idxAlongStep, 1);
+//        pmanager->SetProcessOrdering(theParallelWorldScoringProcessDepth, idxAlongStep, 1);
         pmanager->SetProcessOrdering(theParallelWorldScoringProcessProfile, idxAlongStep, 1);
-        pmanager->SetProcessOrderingToLast(theParallelWorldScoringProcessDepth, idxPostStep);
+//        pmanager->SetProcessOrderingToLast(theParallelWorldScoringProcessDepth, idxPostStep);
         pmanager->SetProcessOrderingToLast(theParallelWorldScoringProcessProfile, idxPostStep);
     }
 }
 
 void GEMPhysicsList::SetCuts()
 {
- // set cut values for gamma at first and for e- second and next for e+,
- // because some processes for e+/e- need cut values for gamma
+    // set cut values for gamma at first and for e- second and next for e+,
+    // because some processes for e+/e- need cut values for gamma
     SetCutValue(cutForGamma, "gamma");
     SetCutValue(cutForElectron, "e-");
     SetCutValue(cutForPositron, "e+");

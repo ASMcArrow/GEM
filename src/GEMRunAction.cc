@@ -14,6 +14,8 @@
 #include "G4TransportationManager.hh"
 #include "G4PropagatorInField.hh"
 #include "G4Navigator.hh"
+#include "G4UImanager.hh"
+#include "DebugUISession.hh"
 
 #include <fstream>
 #include <sstream>
@@ -23,7 +25,7 @@
 
 GEMRunAction::GEMRunAction(const G4String detectorName1, const G4String detectorName2, const G4String detectorName3) : G4UserRunAction()
 {
-    DepthDetectorName = detectorName1;
+    //DepthDetectorName = detectorName1;
     ProfileDetectorName1 = detectorName2;
     ProfileDetectorName2 = detectorName3;
     ScanVertical = 0;
@@ -40,6 +42,9 @@ GEMRunAction::GEMRunAction(const G4String detectorName1, const G4String detector
 
         Depth[i] = 0;
     }
+
+    CurrentNHits = 0;
+    PreviousNHits = 0;
 }
 
 GEMRunAction::~GEMRunAction()
@@ -47,11 +52,15 @@ GEMRunAction::~GEMRunAction()
 
 G4Run* GEMRunAction::GenerateRun()
 {
-    return new GEMRun(DepthDetectorName, ProfileDetectorName1, ProfileDetectorName2, 0);
+    return new GEMRun(/*DepthDetectorName*/" ", ProfileDetectorName1, ProfileDetectorName2, 0);
 }
 
 void GEMRunAction::BeginOfRunAction(const G4Run* aRun)
 {
+    G4UImanager* UImanager = G4UImanager::GetUIpointer();
+    DebugUISession * LoggedSession = new DebugUISession;
+    UImanager->SetCoutDestination(LoggedSession);
+
     G4Navigator* navigator = G4TransportationManager::GetTransportationManager()->GetNavigatorForTracking();
     navigator->SetPushVerbosity(false);
     navigator->SetVerboseLevel(0);
@@ -66,6 +75,12 @@ void GEMRunAction::BeginOfRunAction(const G4Run* aRun)
     magField.setX((G4double)(ScanHorizontal*((G4double)1500/9))-750);
     magField.setY((G4double)(ScanVertical*((G4double)1500/9))-750);
     magField.setZ(0);
+
+    if (isMaster)
+    {
+        std::cout << "### Run " << aRun->GetRunID() << " ScanVertical = " << ScanVertical << " ScanHorizontal = " << ScanHorizontal << std::endl;
+        std::cout << "Magnetic field " << magField.getX() << " " << magField.getY() << std::endl;
+    }
 
     G4cout << "### Run " << aRun->GetRunID() << " ScanVertical = " << ScanVertical << " ScanHorizontal = " << ScanHorizontal << G4endl;
     G4cout << "Magnetic field " << magField.getX() << " " << magField.getY() << G4endl;
@@ -82,78 +97,93 @@ void GEMRunAction::BeginOfRunAction(const G4Run* aRun)
 
 void GEMRunAction::EndOfRunAction(const G4Run* aRun)
 {
+    GEMRun *gemRun = (GEMRun*)aRun;
+    PreviousNHits = CurrentNHits;
+    CurrentNHits = gemRun->GetNumberOfHits("ProfileDetectorZero");
+
+    G4UImanager* UImanager = G4UImanager::GetUIpointer();
+
+    if ((G4double)CurrentNHits < (G4double)(PreviousNHits/10))
+    {
+        UImanager->ApplyCommand("/tracking/storeTrajectory 1");
+        UImanager->ApplyCommand("/tracking/verbose 2");
+    }
+
     if(!IsMaster()) return;
 
-    GEMRun *gemRun = (GEMRun*)aRun;
 
-    G4int hitNum1 = gemRun->GetNumberOfHits("DepthDetector");
-    for (G4int i = 0; i < hitNum1; i++)
-    {
-        GEMDetectorHit* hit = (GEMDetectorHit*)(gemRun->GetHit("DepthDetector", i));
-        if(hit != NULL)
-        {
-            G4int j = hit->GetPos()[0];
-            Depth[j] = Depth[j]+hit->GetEdep();
-        }
-    }
+    G4cout << "Number of events in this run " << gemRun->GetNumberOfEventToBeProcessed()
+           << "Number of hits in this run in ZeroProfile detector " << gemRun->GetNumberOfHits("ProfileDetectorZero") << G4endl;
 
-    std::ofstream depthFile("GEMDepthMT.txt");
-    for (G4int i = 0; i < 100; i++)
-        depthFile << i*22.0/100.0 << " " << Depth[i]/Depth[0] << "\n";
 
+
+    //    G4int hitNum1 = gemRun->GetNumberOfHits("DepthDetector");
+    //    G4cout << "Hits in DepthDetector = " << hitNum1 << G4endl;
+    //    for (G4int i = 0; i < hitNum1; i++)
+    //    {
+    //        GEMDetectorHit* hit = (GEMDetectorHit*)(gemRun->GetHit("DepthDetector", i));
+    //        if(hit != NULL)
+    //        {
+    //            G4int j = hit->GetPos()[0];
+    //            Depth[j] = Depth[j]+hit->GetEdep();
+    //        }
+    //    }
+
+    //    std::ofstream depthFile("GEMDepthMT.txt");
+    //    for (G4int i = 0; i < 100; i++)
+    //        depthFile << i*22.0/100.0 << " " << Depth[i]/Depth[0] << "\n";
 
     // Here is the temporary code for determining the distance between the points
+    //    G4int hitNum = gemRun->GetNumberOfHits("ProfileDetectorIso");
+    //    G4String detectorName = "ProfileDetectorIso";
+    //    G4cout << "Hits in ProfileDetectorIso = " << hitNum << G4endl;
 
-  /*  G4int hitNum = gemRun->GetNumberOfHits("ProfileDetectorPeak");
-    G4String detectorName = "ProfileDetectorPeak";
-    G4cout << "Hits in ProfileDetectorPeak = " << hitNum << G4endl;
+    //    for (G4int i = 0; i < hitNum; i++)
+    //    {
+    //        GEMDetectorHit* hit = (GEMDetectorHit*)(gemRun->GetHit(detectorName, i));
 
-    for (G4int i = 0; i < hitNum; i++)
-    {
-        GEMDetectorHit* hit = (GEMDetectorHit*)(gemRun->GetHit(detectorName, i));
+    //        if(hit != NULL)
+    //        {
+    //            G4int j = hit->GetPos()[0];
+    //            G4int k = hit->GetPos()[1];
+    //            Cells3[j][k] = Cells3[j][k]+hit->GetEdep();
 
-        if(hit != NULL)
-        {
-            G4int j = hit->GetPos()[0];
-            G4int k = hit->GetPos()[1];
-            Cells3[j][k] = Cells3[j][k]+hit->GetEdep();
+    //            // G4cout << "i = " << j << " k = " << k << " edep = " << hit->GetEdep() << G4endl;
+    //        }
+    //    }
 
-    //        G4cout << "i = " << j << " k = " << k << " edep = " << hit->GetEdep() << G4endl;
-        }
-    }
+    //    G4double max = 0;
+    //    G4int maxi = 0;
+    //    G4int maxj = 0;
 
-    G4double max = 0;
-    G4int maxi = 0;
-    G4int maxj = 0;
+    //    for (G4int i = 0; i < 100; i++)
+    //    {
+    //        for (G4int j = 0; j < 100; j++)
+    //        {
+    //            if (max <= Cells3[i][j])
+    //            {
+    //                max = Cells3[i][j];
+    //                maxi = i;
+    //                maxj = j;
+    //            }
+    //        }
+    //    }
 
-    for (G4int i = 0; i < 100; i++)
-    {
-        for (G4int j = 0; j < 100; j++)
-        {
-            if (max <= Cells3[i][j])
-            {
-                max = Cells3[i][j];
-                maxi = i;
-                maxj = j;
-            }
-        }
-    }
+    //    std::ofstream file;
+    //    file.open("PointLocation.txt", std::ios_base::app | std::ios_base::out);
+    //    file << maxi*30.0/100.0 << " " << maxj*30.0/100.0 << " " << max << "\n";;
+    //    file.close();
 
-    std::ofstream file;
-    file.open("PointLocation.txt", std::ios_base::app | std::ios_base::out);
-    file << maxi*30.0/100.0 << " " << maxj*30.0/100.0 << " " << max << "\n";;
-    file.close();
-
-    for (int i = 0; i < 100; i++)
-    {
-        for (int j = 0; j < 100; j++)
-        {
-            Cells3[i][j] = 0;
-        }
-    }*/
+    //    for (int i = 0; i < 100; i++)
+    //    {
+    //        for (int j = 0; j < 100; j++)
+    //        {
+    //            Cells3[i][j] = 0;
+    //        }
+    //    }
 
     this->DumpProfile("ZeroMT", gemRun);
-    this->DumpProfile("PeakMT", gemRun);
+    this->DumpProfile("IsoMT", gemRun);
 }
 
 void GEMRunAction::DumpProfile(G4String type, GEMRun *gemRun)
@@ -169,12 +199,12 @@ void GEMRunAction::DumpProfile(G4String type, GEMRun *gemRun)
         detectorName = "ProfileDetectorZero";
         fileName = "GEMProfileZeroMT.txt";
     }
-    else if (type == "PeakMT")
+    else if (type == "IsoMT")
     {
-        hitNum = gemRun->GetNumberOfHits("ProfileDetectorPeak");
-        G4cout << "Hits in ProfileDetectorPeak = " << hitNum << G4endl;
-        detectorName = "ProfileDetectorPeak";
-        fileName = "GEMProfilePeakMT.txt";
+        hitNum = gemRun->GetNumberOfHits("ProfileDetectorIso");
+        G4cout << "Hits in ProfileDetectorIso = " << hitNum << G4endl;
+        detectorName = "ProfileDetectorIso";
+        fileName = "GEMProfileIsoMT.txt";
     }
 
     for (G4int i = 0; i < hitNum; i++)
@@ -187,7 +217,7 @@ void GEMRunAction::DumpProfile(G4String type, GEMRun *gemRun)
             G4int k = hit->GetPos()[1];
             if (type == "ZeroMT")
                 Cells1[j][k] = Cells1[j][k]+hit->GetEdep();
-            else if (type == "PeakMT")
+            else if (type == "IsoMT")
                 Cells2[j][k] = Cells2[j][k]+hit->GetEdep();
         }
     }
@@ -216,7 +246,7 @@ void GEMRunAction::DumpProfile(G4String type, GEMRun *gemRun)
                     vertical[i] = Cells1[i][j];
             }
 
-            else if (type == "PeakMT")
+            else if (type == "IsoMT")
             {
                 if ((i == 100)||(j == 100))
                 {

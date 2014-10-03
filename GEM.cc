@@ -29,6 +29,7 @@
 #include "G4PropagatorInField.hh"
 #include "G4ExceptionHandler.hh"
 #include "G4StateManager.hh"
+#include "G4ParticleChange.hh"
 
 int main(int argc,char** argv)
 {
@@ -37,7 +38,7 @@ int main(int argc,char** argv)
     G4long seed = time(NULL);
     G4Random::setTheSeed(seed);
 
-#ifndef G4MULTITHREADED
+#ifdef G4MULTITHREADED
     G4MTRunManager* runManager = new G4MTRunManager;
     runManager->SetNumberOfThreads(8);
 #else
@@ -47,12 +48,12 @@ int main(int argc,char** argv)
     G4GeometryManager::GetInstance()->SetWorldMaximumExtent(4.0*m);
 
     G4cout << "Computed tolerance = "
-    << G4GeometryTolerance::GetInstance()->GetSurfaceTolerance()/mm
-    << " mm" << G4endl;
+           << G4GeometryTolerance::GetInstance()->GetSurfaceTolerance()/mm
+           << " mm" << G4endl;
 
     GEMDetectorConstruction* massWorld = new GEMDetectorConstruction;
     //massWorld->RegisterParallelWorld(new GEMParallelWorld("GEMParallelWorld"));
-    //massWorld->RegisterParallelWorld(new GEMVoxParallelWorld("GEMVoxParallelWorld"));
+    massWorld->RegisterParallelWorld(new GEMVoxParallelWorld("GEMVoxParallelWorld"));
     runManager->SetUserInitialization(massWorld);
 
     G4VModularPhysicsList* physicsList = new GEMPhysicsList;

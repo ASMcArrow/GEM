@@ -72,7 +72,7 @@ G4VPhysicalVolume* GEMDetectorConstruction::Construct()
     // Phantom
     G4Box* phantom = new G4Box("Phantom", 15*cm, 15*cm, 11*cm);
     PhantomLogic = new G4LogicalVolume(phantom, MaterialMap["Water"], "PhantomLogic");
-    G4VPhysicalVolume* phantomPhys = new G4PVPlacement(0, G4ThreeVector(0, 0, 0), phantomLogic, "PhantomPhys", worldLogic, false, 0);
+    G4VPhysicalVolume* phantomPhys = new G4PVPlacement(0, G4ThreeVector(0, 0, 0), PhantomLogic, "PhantomPhys", worldLogic, false, 0);
 
     return worldPhys;
 }
@@ -80,16 +80,16 @@ G4VPhysicalVolume* GEMDetectorConstruction::Construct()
 void GEMDetectorConstruction::ConstructSDandField()
 {
     MagneticField = new GEMMagneticField();
-   // MagneticField->SetFieldValue(G4ThreeVector(0., 7500*gauss, 0));
+    // MagneticField->SetFieldValue(G4ThreeVector(0., 7500*gauss, 0));
     G4FieldManager* fieldMgr = new G4FieldManager(MagneticField);
     fieldMgr->CreateChordFinder(MagneticField);
     MagnetLogic->SetFieldManager(fieldMgr, false);
-  //  G4TransportationManager::GetTransportationManager()->SetFieldManager(fieldMgr);
+    //  G4TransportationManager::GetTransportationManager()->SetFieldManager(fieldMgr);
 
-    G4SDManager* sDman = G4SDManager::GetSDMpointer();
-    sDetector = new GEMDetectorSD("DepthDetector", "DepthHitsCollection");
-    sDman->AddNewDetector(sDetector);
-    PhantomLogic->SetSensitiveDetector(sDetector);
+//    G4SDManager* sDman = G4SDManager::GetSDMpointer();
+//    GEMDetectorSD *sDetector = new GEMDetectorSD("DepthDetector", "DepthHitsCollection");
+//    sDman->AddNewDetector(sDetector);
+//    PhantomLogic->SetSensitiveDetector(sDetector);
 }
 
 void GEMDetectorConstruction::InitializeMaterials()

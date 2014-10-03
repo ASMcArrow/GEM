@@ -25,7 +25,7 @@ void
 GEMDetectorSD::Initialize(G4HCofThisEvent*)
 {
     HitsCollection = new GEMDetectorHitsCollection(SensitiveDetectorName,
-                                                           collectionName[0]);
+                                                   collectionName[0]);
 }
 
 G4bool
@@ -39,7 +39,7 @@ GEMDetectorSD::ProcessHits(G4Step* aStep, G4TouchableHistory* obsolete)
     G4double energyDeposit = aStep->GetTotalEnergyDeposit();
 
     if(energyDeposit != 0)
-	{
+    {
         GEMDetectorHit* detectorHit = new GEMDetectorHit();
         detectorHit->SetEdep(energyDeposit);
         detectorHit->SetPos(G4ThreeVector(i, j, 0));

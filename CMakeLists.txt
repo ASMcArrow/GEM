@@ -15,8 +15,8 @@ INCLUDE_DIRECTORIES(${PROJECT_SOURCE_DIR}/include)
 FILE(GLOB sources ${PROJECT_SOURCE_DIR}/src/*.cc)
 FILE(GLOB headers ${PROJECT_SOURCE_DIR}/include/*.hh)
 
-ADD_EXECUTABLE(GEMOneThread GEM.cc ${sources} ${headers})
-TARGET_LINK_LIBRARIES(GEMOneThread ${Geant4_LIBRARIES})
+ADD_EXECUTABLE(GEMTwoDepths GEM.cc ${sources} ${headers})
+TARGET_LINK_LIBRARIES(GEMTwoDepths ${Geant4_LIBRARIES})
 
 set(GEM_SCRIPTS
     init_vis.mac)

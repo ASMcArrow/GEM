@@ -18,16 +18,16 @@ public:
         if (ZeroDetector != NULL)
             delete ZeroDetector;
 
-        if (PeakDetector != NULL)
-            delete PeakDetector;
+        if (IsoDetector != NULL)
+            delete IsoDetector;
     }
 
     virtual void Construct();
     virtual void ConstructSD();
 
 private:
-    G4LogicalVolume *GhostYBoxZeroLog, *GhostYBoxPeakLog, *GhostDetectorZeroLog, *GhostDetectorPeakLog;
-    G4VSensitiveDetector *ZeroDetector, *PeakDetector;
+    G4LogicalVolume *GhostYBoxZeroLog, *GhostYBoxIsoLog, *GhostDetectorZeroLog, *GhostDetectorIsoLog;
+    G4VSensitiveDetector *ZeroDetector, *IsoDetector;
 };
 
 #endif // GEMVOXPARALLELWORLD_HH
