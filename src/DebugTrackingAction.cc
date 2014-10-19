@@ -5,8 +5,9 @@
 
 void DebugTrackingAction::PreUserTrackingAction(const G4Track *aTrack)
 {
-    DebugTrajectory *aTrajectory = new DebugTrajectory();
-    this->fpTrackingManager->SetTrajectory(aTrajectory);
-    this->fpTrackingManager->SetVerboseLevel(Verbosity);
-    this->fpTrackingManager->SetStoreTrajectory(SaveTrajectory);
+  //  DebugTrajectory *aTrajectory = new DebugTrajectory();
+   // this->fpTrackingManager->SetTrajectory(aTrajectory);
+   // G4cout << "PreUserTrackingAction: verbosity " << Verbosity << G4endl;
+   // this->fpTrackingManager->SetVerboseLevel(Verbosity);
+   // this->fpTrackingManager->SetStoreTrajectory(SaveTrajectory);
 }

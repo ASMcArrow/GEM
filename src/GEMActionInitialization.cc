@@ -20,6 +20,6 @@ void GEMActionInitialization::Build() const
 {
     SetUserAction(new GEMPrimaryGeneratorAction);
     SetUserAction(new GEMRunAction(/*"DepthDetector"*/" ", "ProfileDetectorZero", "ProfileDetectorIso"));
-    SetUserAction(new DebugTrackingAction());
-    SetUserAction(new DebugEventAction());
+  //  SetUserAction(new DebugTrackingAction());
+  //  SetUserAction(new DebugEventAction());
 }

@@ -97,17 +97,23 @@ void GEMRunAction::BeginOfRunAction(const G4Run* aRun)
 
 void GEMRunAction::EndOfRunAction(const G4Run* aRun)
 {
+    G4UImanager* UImanager = G4UImanager::GetUIpointer();
+    UImanager->ApplyCommand("/tracking/verbose 0");
+    UImanager->ApplyCommand("/event/verbose 0");
+
     GEMRun *gemRun = (GEMRun*)aRun;
+    G4cout << "Number of events to be processed " << gemRun->GetNumberOfEventToBeProcessed() << G4endl;
+
     PreviousNHits = CurrentNHits;
     CurrentNHits = gemRun->GetNumberOfHits("ProfileDetectorZero");
 
-    G4UImanager* UImanager = G4UImanager::GetUIpointer();
+//    if ((G4double)CurrentNHits < (G4double)(PreviousNHits/2))
+//    {
+//       // UImanager->ApplyCommand("/tracking/storeTrajectory 1");
+//        UImanager->ApplyCommand("/tracking/verbose 0");
+//        UImanager->ApplyCommand("/event/verbose 1");
 
-    if ((G4double)CurrentNHits < (G4double)(PreviousNHits/10))
-    {
-        UImanager->ApplyCommand("/tracking/storeTrajectory 1");
-        UImanager->ApplyCommand("/tracking/verbose 2");
-    }
+//    }
 
     if(!IsMaster()) return;
 

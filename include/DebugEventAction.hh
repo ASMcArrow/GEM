@@ -15,7 +15,7 @@ public:
     void BeginOfEventAction(const G4Event* anEvent);
     void EndOfEventAction(const G4Event* anEvent);
 
-    static G4ThreadLocal G4int RunCount;
+    static G4ThreadLocal G4int EventCount;
 
 private:
     G4int CollectionID1, CollectionID2, CollectionID3;

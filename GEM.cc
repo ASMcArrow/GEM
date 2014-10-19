@@ -30,6 +30,7 @@
 #include "G4ExceptionHandler.hh"
 #include "G4StateManager.hh"
 #include "G4ParticleChange.hh"
+#include "G4CoupledTransportation.hh"
 
 int main(int argc,char** argv)
 {
