@@ -16,7 +16,7 @@ class GEMDetectorConstruction : public G4VUserDetectorConstruction
 
 public:
     GEMDetectorConstruction() {}
-    ~GEMDetectorConstruction() {}
+    virtual ~GEMDetectorConstruction();
 
     G4VPhysicalVolume* Construct();
 

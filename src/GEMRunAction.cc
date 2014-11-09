@@ -5,7 +5,6 @@
 
 #include "G4RunManager.hh"
 #include "G4MTRunManager.hh"
-#include "GEMDetectorConstruction.hh"
 #include "G4THitsMap.hh"
 #include "G4SDManager.hh"
 #include "G4UnitsTable.hh"
@@ -25,11 +24,13 @@
 
 GEMRunAction::GEMRunAction(const G4String detectorName1, const G4String detectorName2, const G4String detectorName3) : G4UserRunAction()
 {
+    G4UImanager* UImanager = G4UImanager::GetUIpointer();
+    DebugUISession * LoggedSession = new DebugUISession;
+    UImanager->SetCoutDestination(LoggedSession);
+
     //DepthDetectorName = detectorName1;
     ProfileDetectorName1 = detectorName2;
     ProfileDetectorName2 = detectorName3;
-    ScanVertical = 0;
-    ScanHorizontal = 0;
 
     for (int i = 0; i < 100; i++)
     {
@@ -57,10 +58,6 @@ G4Run* GEMRunAction::GenerateRun()
 
 void GEMRunAction::BeginOfRunAction(const G4Run* aRun)
 {
-    G4UImanager* UImanager = G4UImanager::GetUIpointer();
-    DebugUISession * LoggedSession = new DebugUISession;
-    UImanager->SetCoutDestination(LoggedSession);
-
     G4Navigator* navigator = G4TransportationManager::GetTransportationManager()->GetNavigatorForTracking();
     navigator->SetPushVerbosity(false);
     navigator->SetVerboseLevel(0);
@@ -76,50 +73,37 @@ void GEMRunAction::BeginOfRunAction(const G4Run* aRun)
     magField.setY((G4double)(ScanVertical*((G4double)1500/9))-750);
     magField.setZ(0);
 
-    if (isMaster)
-    {
-        std::cout << "### Run " << aRun->GetRunID() << " ScanVertical = " << ScanVertical << " ScanHorizontal = " << ScanHorizontal << std::endl;
-        std::cout << "Magnetic field " << magField.getX() << " " << magField.getY() << std::endl;
-    }
-
     G4cout << "### Run " << aRun->GetRunID() << " ScanVertical = " << ScanVertical << " ScanHorizontal = " << ScanHorizontal << G4endl;
     G4cout << "Magnetic field " << magField.getX() << " " << magField.getY() << G4endl;
     GEMDetectorConstruction::MagneticField->SetFieldValue(magField);
-
-    ScanVertical++;
-
-#ifdef G4MULTITHREADED
-    G4MTRunManager::GetMasterRunManager()->GeometryHasBeenModified();
-#else
-    G4RunManager::GetRunManager()->GeometryHasBeenModified();
-#endif
 }
 
 void GEMRunAction::EndOfRunAction(const G4Run* aRun)
 {
-    G4UImanager* UImanager = G4UImanager::GetUIpointer();
-    UImanager->ApplyCommand("/tracking/verbose 0");
-    UImanager->ApplyCommand("/event/verbose 0");
+    ScanVertical++;
 
     GEMRun *gemRun = (GEMRun*)aRun;
-    G4cout << "Number of events to be processed " << gemRun->GetNumberOfEventToBeProcessed() << G4endl;
+
+//    G4UImanager* UImanager = G4UImanager::GetUIpointer();
+//    UImanager->ApplyCommand("/tracking/verbose 0");
+//    UImanager->ApplyCommand("/event/verbose 0");
 
     PreviousNHits = CurrentNHits;
     CurrentNHits = gemRun->GetNumberOfHits("ProfileDetectorZero");
 
-//    if ((G4double)CurrentNHits < (G4double)(PreviousNHits/2))
-//    {
-//       // UImanager->ApplyCommand("/tracking/storeTrajectory 1");
-//        UImanager->ApplyCommand("/tracking/verbose 0");
-//        UImanager->ApplyCommand("/event/verbose 1");
+    //    if ((G4double)CurrentNHits < (G4double)(PreviousNHits/2))
+    //    {
+    //       // UImanager->ApplyCommand("/tracking/storeTrajectory 1");
+    //        UImanager->ApplyCommand("/tracking/verbose 0");
+    //        UImanager->ApplyCommand("/event/verbose 1");
 
-//    }
+    //    }
 
     if(!IsMaster()) return;
 
 
-    G4cout << "Number of events in this run " << gemRun->GetNumberOfEventToBeProcessed()
-           << "Number of hits in this run in ZeroProfile detector " << gemRun->GetNumberOfHits("ProfileDetectorZero") << G4endl;
+    G4cout << "GEMRunAction: Number of events in this run " << gemRun->GetNumberOfEventToBeProcessed() << G4endl;
+    G4cout << "GEMRunAction: Number of hits in this run in ZeroProfile detector " << gemRun->GetNumberOfHits("ProfileDetectorZero") << G4endl;
 
 
 

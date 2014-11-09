@@ -20,7 +20,6 @@
 #include "G4FieldManager.hh"
 #include "G4TransportationManager.hh"
 #include "G4Navigator.hh"
-#include "G4PropagatorInField.hh"
 #include "G4SDManager.hh"
 
 using namespace CLHEP;
@@ -77,19 +76,28 @@ G4VPhysicalVolume* GEMDetectorConstruction::Construct()
     return worldPhys;
 }
 
+GEMDetectorConstruction::~GEMDetectorConstruction()
+{
+    std::map<std::string, G4Material*>::iterator i;
+    for (i = MaterialMap.begin(); i != MaterialMap.end(); i++)
+    {
+        delete i->second;
+        MaterialMap.erase(i);
+    }
+}
+
 void GEMDetectorConstruction::ConstructSDandField()
 {
     MagneticField = new GEMMagneticField();
     // MagneticField->SetFieldValue(G4ThreeVector(0., 7500*gauss, 0));
     G4FieldManager* fieldMgr = new G4FieldManager(MagneticField);
-    fieldMgr->CreateChordFinder(MagneticField);
     MagnetLogic->SetFieldManager(fieldMgr, false);
     //  G4TransportationManager::GetTransportationManager()->SetFieldManager(fieldMgr);
 
-//    G4SDManager* sDman = G4SDManager::GetSDMpointer();
-//    GEMDetectorSD *sDetector = new GEMDetectorSD("DepthDetector", "DepthHitsCollection");
-//    sDman->AddNewDetector(sDetector);
-//    PhantomLogic->SetSensitiveDetector(sDetector);
+    //    G4SDManager* sDman = G4SDManager::GetSDMpointer();
+    //    GEMDetectorSD *sDetector = new GEMDetectorSD("DepthDetector", "DepthHitsCollection");
+    //    sDman->AddNewDetector(sDetector);
+    //    PhantomLogic->SetSensitiveDetector(sDetector);
 }
 
 void GEMDetectorConstruction::InitializeMaterials()

@@ -18,8 +18,7 @@ public:
     static G4ThreadLocal G4int EventCount;
 
 private:
-    G4int CollectionID1, CollectionID2, CollectionID3;
-    G4int PreviousNHits, CurrentNHits;
+    G4int i;
 };
 
 #endif // DEBUGEVENTACTION_HH

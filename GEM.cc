@@ -1,3 +1,6 @@
+#undef G4MULTITHREADED
+#define G4DEBUG_FIELD
+
 #include <cstdio>
 #include <ctime>
 
@@ -24,13 +27,11 @@
 #include "GEMParallelWorld.hh"
 #include "G4Navigator.hh"
 #include "G4GeometryTolerance.hh"
+#include "G4Navigator.hh"
 #include "G4GeometryManager.hh"
 #include "G4TransportationManager.hh"
 #include "G4PropagatorInField.hh"
-#include "G4ExceptionHandler.hh"
-#include "G4StateManager.hh"
-#include "G4ParticleChange.hh"
-#include "G4CoupledTransportation.hh"
+#include "G4PathFinder.hh"
 
 int main(int argc,char** argv)
 {
@@ -67,12 +68,15 @@ int main(int argc,char** argv)
 
     G4Navigator* navigator = G4TransportationManager::GetTransportationManager()->GetNavigatorForTracking();
     navigator->SetPushVerbosity(false);
-    runManager->SetVerboseLevel(0);
 
-    G4VExceptionHandler *handler = G4StateManager::GetStateManager()->GetExceptionHandler();
+    runManager->SetVerboseLevel(1);
+
+    G4UImanager* UImanager = G4UImanager::GetUIpointer();
+   // UImanager->ApplyCommand("/event/verbose 1");
 
     for (G4int i = 0 ; i < 100; i++)
     {
+        UImanager->ApplyCommand("/run/geometryModified");
         runManager->BeamOn(1000000);
     }
 

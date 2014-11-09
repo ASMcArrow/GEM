@@ -12,8 +12,10 @@ DebugEventAction::DebugEventAction()
 {}
 
 void DebugEventAction::BeginOfEventAction(const G4Event *anEvent)
-{}
-
+{
+    if ((anEvent->GetEventID() == 500000)||(anEvent->GetEventID() == 1000000))
+        G4cout << "This is new event #" << anEvent->GetEventID() << G4endl;
+}
 
 void DebugEventAction::EndOfEventAction(const G4Event *anEvent)
 {

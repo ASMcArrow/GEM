@@ -3,6 +3,7 @@
 #include "GEMPrimaryGeneratorAction.hh"
 #include "DebugTrackingAction.hh"
 #include "DebugEventAction.hh"
+#include "DebugSteppingAction.hh"
 
 GEMActionInitialization::GEMActionInitialization()
     : G4VUserActionInitialization()
@@ -20,6 +21,7 @@ void GEMActionInitialization::Build() const
 {
     SetUserAction(new GEMPrimaryGeneratorAction);
     SetUserAction(new GEMRunAction(/*"DepthDetector"*/" ", "ProfileDetectorZero", "ProfileDetectorIso"));
+    SetUserAction(new DebugSteppingAction());
   //  SetUserAction(new DebugTrackingAction());
-  //  SetUserAction(new DebugEventAction());
+    SetUserAction(new DebugEventAction());
 }
