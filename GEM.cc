@@ -1,4 +1,4 @@
-#undef G4MULTITHREADED
+//#undef G4MULTITHREADED
 #define G4DEBUG_FIELD
 
 #include <cstdio>
@@ -32,6 +32,10 @@
 #include "G4TransportationManager.hh"
 #include "G4PropagatorInField.hh"
 #include "G4PathFinder.hh"
+#include "G4FPEDetection.hh"
+#include "G4RunManagerKernel.hh"
+#include "G4Threading.hh"
+#include "G4WorkerRunManager.hh"
 
 int main(int argc,char** argv)
 {
@@ -49,9 +53,9 @@ int main(int argc,char** argv)
 
     G4GeometryManager::GetInstance()->SetWorldMaximumExtent(4.0*m);
 
-    G4cout << "Computed tolerance = "
-           << G4GeometryTolerance::GetInstance()->GetSurfaceTolerance()/mm
-           << " mm" << G4endl;
+//    G4cout << "Computed tolerance = "
+//           << G4GeometryTolerance::GetInstance()->GetSurfaceTolerance()/mm
+//           << " mm" << G4endl;
 
     GEMDetectorConstruction* massWorld = new GEMDetectorConstruction;
     //massWorld->RegisterParallelWorld(new GEMParallelWorld("GEMParallelWorld"));
@@ -69,7 +73,7 @@ int main(int argc,char** argv)
     G4Navigator* navigator = G4TransportationManager::GetTransportationManager()->GetNavigatorForTracking();
     navigator->SetPushVerbosity(false);
 
-    runManager->SetVerboseLevel(1);
+    runManager->SetVerboseLevel(10);
 
     G4UImanager* UImanager = G4UImanager::GetUIpointer();
    // UImanager->ApplyCommand("/event/verbose 1");

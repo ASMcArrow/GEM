@@ -84,27 +84,22 @@ void GEMRunAction::EndOfRunAction(const G4Run* aRun)
 
     GEMRun *gemRun = (GEMRun*)aRun;
 
-//    G4UImanager* UImanager = G4UImanager::GetUIpointer();
-//    UImanager->ApplyCommand("/tracking/verbose 0");
-//    UImanager->ApplyCommand("/event/verbose 0");
+    G4UImanager* UImanager = G4UImanager::GetUIpointer();
+    UImanager->ApplyCommand("/tracking/verbose 0");
+    UImanager->ApplyCommand("/event/verbose 0");
 
     PreviousNHits = CurrentNHits;
     CurrentNHits = gemRun->GetNumberOfHits("ProfileDetectorZero");
 
-    //    if ((G4double)CurrentNHits < (G4double)(PreviousNHits/2))
-    //    {
-    //       // UImanager->ApplyCommand("/tracking/storeTrajectory 1");
-    //        UImanager->ApplyCommand("/tracking/verbose 0");
-    //        UImanager->ApplyCommand("/event/verbose 1");
-
-    //    }
-
-    if(!IsMaster()) return;
-
+    if ((G4double)CurrentNHits < (G4double)(PreviousNHits/2))
+    {
+        UImanager->ApplyCommand("/tracking/verbose 0");
+        UImanager->ApplyCommand("/event/verbose 1");
+    }
 
     G4cout << "GEMRunAction: Number of events in this run " << gemRun->GetNumberOfEventToBeProcessed() << G4endl;
     G4cout << "GEMRunAction: Number of hits in this run in ZeroProfile detector " << gemRun->GetNumberOfHits("ProfileDetectorZero") << G4endl;
-
+    if(!IsMaster()) return;
 
 
     //    G4int hitNum1 = gemRun->GetNumberOfHits("DepthDetector");
