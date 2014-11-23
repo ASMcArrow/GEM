@@ -1,4 +1,4 @@
-//#undef G4MULTITHREADED
+#undef G4MULTITHREADED
 #define G4DEBUG_FIELD
 
 #include <cstdio>
