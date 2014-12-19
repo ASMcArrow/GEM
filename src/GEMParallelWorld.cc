@@ -20,7 +20,7 @@ void GEMParallelWorld::Construct()
     G4LogicalVolume *worldLog = ghostWorld->GetLogicalVolume();
 
  // Place volumes in the parallel world here
-    G4double detectorR = 5*cm;
+    G4double detectorR = 2.5*mm;
     G4int nDivisions = 100;
 
  // Tube in the centre of the phantom

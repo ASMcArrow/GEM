@@ -18,7 +18,7 @@ GEMMagneticField::~GEMMagneticField()
     delete Messenger;
 }
 
-void GEMMagneticField::GetFieldValue(const G4double [4], G4double *Bfield) const
+void GEMMagneticField::GetFieldValue(G4double *Bfield) const
 {
     Bfield[0] = fieldVal.x();
     Bfield[1] = fieldVal.y();
@@ -27,7 +27,7 @@ void GEMMagneticField::GetFieldValue(const G4double [4], G4double *Bfield) const
 
 void GEMMagneticField::SetFieldValue(const G4ThreeVector &newFieldValue)
 {
-    fieldVal = newFieldValue*gauss;
+    fieldVal = newFieldValue*CLHEP::gauss;
 
     /*#ifndef G4MULTITHREADED
     G4MTRunManager::GetMasterRunManager()->GeometryHasBeenModified();

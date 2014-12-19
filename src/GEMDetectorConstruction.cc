@@ -48,7 +48,7 @@ G4VPhysicalVolume* GEMDetectorConstruction::Construct()
     // Scanning Magnet
     G4Box* magnet = new G4Box("Magnet", 2.54*cm, 2.54*cm, 25*cm);
     MagnetLogic = new G4LogicalVolume(magnet, MaterialMap["Air"], "MagnetLogic");
-    G4VPhysicalVolume* magnetPhys = new G4PVPlacement(0, G4ThreeVector(0, 0, -250*cm), MagnetLogic, "MagnetPhys", worldLogic, false, 0);
+    G4VPhysicalVolume* magnetPhys = new G4PVPlacement(0, G4ThreeVector(0, 0, -230*cm), MagnetLogic, "MagnetPhys", worldLogic, false, 0);
     /*G4Tubs* magnet = new G4Tubs("Magnet", 0*cm, 2.54*cm, 25*cm, 0, CLHEP::twopi);
     MagnetLogic = new G4LogicalVolume(magnet, MaterialMap["Air"], "MagnetLogic");
     G4VPhysicalVolume* magnetPhys = new G4PVPlacement(0, G4ThreeVector(0, 0, -250*cm), MagnetLogic, "MagnetPhys", worldLogic, false, 0);*/
@@ -89,7 +89,7 @@ GEMDetectorConstruction::~GEMDetectorConstruction()
 void GEMDetectorConstruction::ConstructSDandField()
 {
     MagneticField = new GEMMagneticField();
-    // MagneticField->SetFieldValue(G4ThreeVector(0., 7500*gauss, 0));
+    //MagneticField->SetFieldValue(G4ThreeVector(7500,7500, 0));
     G4FieldManager* fieldMgr = new G4FieldManager(MagneticField);
     MagnetLogic->SetFieldManager(fieldMgr, false);
     //  G4TransportationManager::GetTransportationManager()->SetFieldManager(fieldMgr);

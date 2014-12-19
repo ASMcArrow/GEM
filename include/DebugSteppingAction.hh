@@ -17,15 +17,15 @@ public:
 
     virtual void UserSteppingAction(const G4Step* aStep)
     {
-        if (fpSteppingManager->GetfCurrentVolume()->GetLogicalVolume()->GetName() == "MagnetLogic")
-        {
+//        if (fpSteppingManager->GetfCurrentVolume()->GetLogicalVolume()->GetName() == "MagnetLogic")
+//        {
 
-            if (G4TransportationManager::GetTransportationManager()->GetPropagatorInField()->GetVerboseLevel() == 0)
-            {
-                G4cout << "Major PropagatorInField reports, sir!" << G4endl;
-                G4TransportationManager::GetTransportationManager()->GetPropagatorInField()->SetVerboseLevel(10);
-            }
-        }
+//            if (G4TransportationManager::GetTransportationManager()->GetPropagatorInField()->GetVerboseLevel() == 0)
+//            {
+//                G4cout << "Major PropagatorInField reports, sir!" << G4endl;
+//                G4TransportationManager::GetTransportationManager()->GetPropagatorInField()->SetVerboseLevel(10);
+//            }
+//        }
     }
 
 };

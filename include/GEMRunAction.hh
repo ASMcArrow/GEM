@@ -26,6 +26,7 @@ private:
     G4double Depth[100];
     G4int ScanVertical, ScanHorizontal;
     G4int CurrentNHits, PreviousNHits;
+    G4ThreeVector MagField;
 };
 
 #endif

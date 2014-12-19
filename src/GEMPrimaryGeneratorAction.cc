@@ -14,16 +14,19 @@ GEMPrimaryGeneratorAction::GEMPrimaryGeneratorAction()
 
     G4SPSEneDistribution* energy = CircleSource->GetEneDist();
     energy->SetEnergyDisType("Gauss");
-    energy->SetBeamSigmaInE(0.95 *MeV);
+    energy->SetBeamSigmaInE(1 *MeV);
     energy->SetMonoEnergy(153.5 *MeV);
 
     G4SPSPosDistribution* position = CircleSource->GetPosDist();
     position->SetPosDisType("Beam");
-    position->SetCentreCoords(G4ThreeVector(0.0*m, 0.0*m, -276.0*cm));
-    position->SetBeamSigmaInR(3.2866*mm);
+    position->SetCentreCoords(G4ThreeVector(0.0*m, 0.0*m, -242*cm));
+    position->SetBeamSigmaInR(5.2*mm);
 
     G4SPSAngDistribution* angular = CircleSource->GetAngDist();
+    angular->SetAngDistType("beam1d");
     angular->SetParticleMomentumDirection(G4ThreeVector(0.0,0.0,1.0));
+    angular->DefineAngRefAxes("angref1", G4ThreeVector(-1.0,0.0,0.0));
+    angular->SetBeamSigmaInAngR(0.005);
 
     CircleSource->SetNumberOfParticles(1);
 }

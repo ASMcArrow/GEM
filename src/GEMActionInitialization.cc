@@ -14,14 +14,14 @@ GEMActionInitialization::~GEMActionInitialization()
 
 void GEMActionInitialization::BuildForMaster() const
 {
-    SetUserAction(new GEMRunAction(/*"DepthDetector"*/" ", "ProfileDetectorZero", "ProfileDetectorIso"));
+    SetUserAction(new GEMRunAction("DepthDetector", "ProfileDetectorZero", "ProfileDetectorIso"));
 }
 
 void GEMActionInitialization::Build() const
 {
     SetUserAction(new GEMPrimaryGeneratorAction);
-    SetUserAction(new GEMRunAction(/*"DepthDetector"*/" ", "ProfileDetectorZero", "ProfileDetectorIso"));
-    SetUserAction(new DebugSteppingAction());
+    SetUserAction(new GEMRunAction("DepthDetector", "ProfileDetectorZero", "ProfileDetectorIso"));
+   // SetUserAction(new DebugSteppingAction());
   //  SetUserAction(new DebugTrackingAction());
-    SetUserAction(new DebugEventAction());
+    //SetUserAction(new DebugEventAction());
 }

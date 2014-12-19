@@ -1,5 +1,8 @@
-#undef G4MULTITHREADED
+#define G4MULTITHREADED
 #define G4DEBUG_FIELD
+
+//#undef G4UI_USE
+//#undef G4VIS_USE
 
 #include <cstdio>
 #include <ctime>
@@ -53,12 +56,12 @@ int main(int argc,char** argv)
 
     G4GeometryManager::GetInstance()->SetWorldMaximumExtent(4.0*m);
 
-//    G4cout << "Computed tolerance = "
-//           << G4GeometryTolerance::GetInstance()->GetSurfaceTolerance()/mm
-//           << " mm" << G4endl;
+    //    G4cout << "Computed tolerance = "
+    //           << G4GeometryTolerance::GetInstance()->GetSurfaceTolerance()/mm
+    //           << " mm" << G4endl;
 
     GEMDetectorConstruction* massWorld = new GEMDetectorConstruction;
-    //massWorld->RegisterParallelWorld(new GEMParallelWorld("GEMParallelWorld"));
+    massWorld->RegisterParallelWorld(new GEMParallelWorld("GEMParallelWorld"));
     massWorld->RegisterParallelWorld(new GEMVoxParallelWorld("GEMVoxParallelWorld"));
     runManager->SetUserInitialization(massWorld);
 
@@ -73,23 +76,21 @@ int main(int argc,char** argv)
     G4Navigator* navigator = G4TransportationManager::GetTransportationManager()->GetNavigatorForTracking();
     navigator->SetPushVerbosity(false);
 
-    runManager->SetVerboseLevel(10);
-
+    runManager->SetVerboseLevel(0);
     G4UImanager* UImanager = G4UImanager::GetUIpointer();
-   // UImanager->ApplyCommand("/event/verbose 1");
 
+#ifndef G4UI_USE
     for (G4int i = 0 ; i < 100; i++)
     {
         UImanager->ApplyCommand("/run/geometryModified");
-        runManager->BeamOn(1000000);
+        runManager->BeamOn(10000);
     }
+#endif
 
-    /*#ifdef G4VIS_USE
+#ifdef G4VIS_USE
     G4VisManager* visManager = new G4VisExecutive;
     visManager->Initialize();
 #endif
-
-    G4UImanager* UImanager = G4UImanager::GetUIpointer();
 
 #ifdef G4UI_USE
     G4UIExecutive* ui = new G4UIExecutive(argc, argv);
@@ -98,7 +99,7 @@ int main(int argc,char** argv)
 #endif
     ui->SessionStart();
     delete ui;
-#endif*/
+#endif
 
     delete runManager;
     return 0;

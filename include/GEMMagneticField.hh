@@ -13,7 +13,7 @@ public:
     GEMMagneticField();
     virtual ~GEMMagneticField();
 
-    virtual void GetFieldValue(const G4double[4], G4double *Bfield) const;
+    virtual void GetFieldValue(G4double *Bfield) const;
     void SetFieldValue(const G4ThreeVector& newFieldValue);
 
 private:
