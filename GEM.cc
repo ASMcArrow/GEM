@@ -1,8 +1,10 @@
-#define G4MULTITHREADED
+
+//#define G4MULTITHREADED
 #define G4DEBUG_FIELD
 
-//#undef G4UI_USE
-//#undef G4VIS_USE
+#undef G4UI_USE
+#undef G4VIS_USE
+#undef G4MULTITHREADED
 
 #include <cstdio>
 #include <ctime>
@@ -39,6 +41,8 @@
 #include "G4RunManagerKernel.hh"
 #include "G4Threading.hh"
 #include "G4WorkerRunManager.hh"
+#include "G4EventManager.hh"
+#include "G4EmParameters.hh"
 
 int main(int argc,char** argv)
 {
@@ -83,12 +87,13 @@ int main(int argc,char** argv)
     for (G4int i = 0 ; i < 100; i++)
     {
         UImanager->ApplyCommand("/run/geometryModified");
-        runManager->BeamOn(10000);
+        runManager->BeamOn(1000000);
     }
 #endif
 
 #ifdef G4VIS_USE
     G4VisManager* visManager = new G4VisExecutive;
+    visManager->SetVerboseLevel(4);
     visManager->Initialize();
 #endif
 

@@ -2,7 +2,8 @@
 
 // Physic lists (contained inside the Geant4 source code, in the 'physicslists folder')
 #include "G4HadronPhysicsQGSP_BIC.hh"
-#include "G4EmStandardPhysics_option3.hh"
+#include "G4HadronPhysicsQGSP_BERT_HP.hh"
+#include "G4EmStandardPhysics_option4.hh"
 #include "G4EmLivermorePhysics.hh"
 #include "G4EmPenelopePhysics.hh"
 #include "G4EmExtraPhysics.hh"
@@ -31,9 +32,24 @@ GEMPhysicsList::GEMPhysicsList() : G4VModularPhysicsList()
     cutForElectron  = defaultCutValue;
     cutForPositron  = defaultCutValue;
 
+    G4EmParameters* emParameters = G4EmParameters::Instance();
+    emParameters->SetMinEnergy(0*eV);
+    emParameters->SetMaxEnergy(200*MeV);
+    emParameters->SetNumberOfBinsPerDecade(50);
+
+//    emParameters->SetMuHadLateralDisplacement(true);
+//    emParameters->SetLateralDisplacement(true);
+
+//    emParameters->SetMscStepLimitType(fUseDistanceToBoundary);
+//    emParameters->SetMscGeomFactor(2.5);
+//    emParameters->SetMscRangeFactor(0.04);
+
+//    emParameters->SetApplyCuts(true);
+//    emParameters->SetVerbose(true);
+
     SetVerboseLevel(1);
 
-    RegisterPhysics(new G4EmStandardPhysics_option3);
+    RegisterPhysics(new G4EmStandardPhysics_option4);
     RegisterPhysics(new G4HadronPhysicsQGSP_BIC);
     RegisterPhysics(new G4EmExtraPhysics);
     RegisterPhysics(new G4HadronElasticPhysics);

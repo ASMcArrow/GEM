@@ -24,13 +24,16 @@
 
 GEMRunAction::GEMRunAction(const G4String detectorName1, const G4String detectorName2, const G4String detectorName3) : G4UserRunAction()
 {
-//    G4UImanager* UImanager = G4UImanager::GetUIpointer();
-//    DebugUISession * LoggedSession = new DebugUISession;
-//    UImanager->SetCoutDestination(LoggedSession);
+    G4UImanager* UImanager = G4UImanager::GetUIpointer();
+    DebugUISession * LoggedSession = new DebugUISession;
+    UImanager->SetCoutDestination(LoggedSession);
 
     DepthDetectorName = detectorName1;
     ProfileDetectorName1 = detectorName2;
     ProfileDetectorName2 = detectorName3;
+
+    ScanVertical = 0;
+    ScanHorizontal = 0;
 
     //MagField.set(0,0,0);
 
@@ -68,15 +71,17 @@ void GEMRunAction::BeginOfRunAction(const G4Run* aRun)
     {
         ScanVertical = 0;
         ScanHorizontal++;
+        if (ScanHorizontal > 9)
+            ScanHorizontal = 0;
     }
 
-//    G4ThreeVector magField(0,0,0);
-//    magField.setX((G4double)(ScanHorizontal*((G4double)1500/9))-750);
-//    magField.setY((G4double)(ScanVertical*((G4double)1500/9))-750);
-//    magField.setZ(0);
+    //    G4ThreeVector magField(0,0,0);
+    //    magField.setX((G4double)(ScanHorizontal*((G4double)1500/9))-750);
+    //    magField.setY((G4double)(ScanVertical*((G4double)1500/9))-750);
+    //    magField.setZ(0);
 
-    MagField.setX((G4double)(ScanHorizontal*((G4double)2000/9))-1000);
-    MagField.setY((G4double)(ScanVertical*((G4double)2000/9))-1000);
+    MagField.setX((G4double)(ScanHorizontal*((G4double)2500/9))-1250);
+    MagField.setY((G4double)(ScanVertical*((G4double)2500/9))-1250);
     MagField.setZ(0);
 
     G4cout << "### Run " << aRun->GetRunID() << " ScanVertical = " << ScanVertical << " ScanHorizontal = " << ScanHorizontal << G4endl;
@@ -97,11 +102,11 @@ void GEMRunAction::EndOfRunAction(const G4Run* aRun)
     PreviousNHits = CurrentNHits;
     CurrentNHits = gemRun->GetNumberOfHits("ProfileDetectorZero");
 
-    if ((G4double)CurrentNHits < (G4double)(PreviousNHits/2))
-    {
-        UImanager->ApplyCommand("/tracking/verbose 0");
-        UImanager->ApplyCommand("/event/verbose 1");
-    }
+    //    if ((G4double)CurrentNHits < (G4double)(PreviousNHits/2))
+    //    {
+    //      //  UImanager->ApplyCommand("/tracking/verbose 0");
+    //        UImanager->ApplyCommand("/event/verbose 1");
+    //    }
 
     G4cout << "GEMRunAction: Number of events in this run " << gemRun->GetNumberOfEventToBeProcessed() << G4endl;
     G4cout << "GEMRunAction: Number of hits in this run in ZeroProfile detector " << gemRun->GetNumberOfHits("ProfileDetectorZero") << G4endl;
@@ -119,9 +124,12 @@ void GEMRunAction::EndOfRunAction(const G4Run* aRun)
         }
     }
 
-    std::ofstream depthFile("/media/large2/GEMDepthMT.txt");
-    for (G4int i = 0; i < 100; i++)
-        depthFile << i*22.0/100.0 << " " << Depth[i]/Depth[0] << "\n";
+    if (ScanHorizontal >= 9)
+    {
+        std::ofstream depthFile("/media/large2/GEMDepthMT.txt");
+        for (G4int i = 0; i < 100; i++)
+            depthFile << i*22.0/100.0 << " " << Depth[i]/Depth[0] << "\n";
+    }
 
     // Here is the temporary code for determining the distance between the points
     G4int hitNum = gemRun->GetNumberOfHits("ProfileDetectorIso");
@@ -217,10 +225,10 @@ void GEMRunAction::DumpProfile(G4String type, GEMRun *gemRun)
     std::ofstream profileFile(fileName);
 
     G4double horizontal[101], vertical[101];
-    for (G4int i = 0; i < 100; i++)
+    for (G4int i = 0; i <= 100; i++)
     {
         profileFile << "\n";
-        for (G4int j = 0; j < 100; j++)
+        for (G4int j = 0; j <= 100; j++)
         {
             if (type == "ZeroMT")
             {

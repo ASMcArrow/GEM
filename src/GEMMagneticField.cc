@@ -18,7 +18,7 @@ GEMMagneticField::~GEMMagneticField()
     delete Messenger;
 }
 
-void GEMMagneticField::GetFieldValue(G4double *Bfield) const
+void GEMMagneticField::GetFieldValue(const G4double[4], G4double *Bfield) const
 {
     Bfield[0] = fieldVal.x();
     Bfield[1] = fieldVal.y();
