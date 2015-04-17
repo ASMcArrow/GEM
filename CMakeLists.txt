@@ -2,6 +2,7 @@ CMAKE_MINIMUM_REQUIRED(VERSION 2.6 FATAL_ERROR)
 
 PROJECT(GEM)
 
+OPTION(WITH_GEANT4_UIVIS "Build example with Geant4 UI and Vis drivers" ON)
 FIND_PACKAGE(Geant4 REQUIRED ui_all vis_all)
 IF(NOT Geant4_FOUND)
     MESSAGE(FATAL_ERROR "Geant4 not found!")

@@ -2,8 +2,8 @@
 //#define G4MULTITHREADED
 #define G4DEBUG_FIELD
 
-#undef G4UI_USE
-#undef G4VIS_USE
+//#undef G4UI_USE
+//#undef G4VIS_USE
 #undef G4MULTITHREADED
 
 #include <cstdio>
@@ -46,6 +46,11 @@
 
 int main(int argc,char** argv)
 {
+    G4UIExecutive* ui = 0;
+    if ( argc == 1 ) {
+      ui = new G4UIExecutive(argc, argv);
+    }
+
     // Set the custom seed for the random engine
     G4Random::setTheEngine(new CLHEP::RanecuEngine);
     G4long seed = time(NULL);
@@ -75,39 +80,41 @@ int main(int argc,char** argv)
 
     runManager->SetUserInitialization(new GEMActionInitialization);
 
-    runManager->Initialize();
+   // runManager->Initialize();
 
     G4Navigator* navigator = G4TransportationManager::GetTransportationManager()->GetNavigatorForTracking();
     navigator->SetPushVerbosity(false);
 
-    runManager->SetVerboseLevel(0);
+    G4VisManager* visManager = new G4VisExecutive;
+    // G4VisExecutive can take a verbosity argument - see /vis/verbose guidance.
+    // G4VisManager* visManager = new G4VisExecutive("Quiet");
+    visManager->Initialize();
+
+    // Get the pointer to the User Interface manager
     G4UImanager* UImanager = G4UImanager::GetUIpointer();
 
-#ifndef G4UI_USE
-    for (G4int i = 0 ; i < 100; i++)
-    {
-        UImanager->ApplyCommand("/run/geometryModified");
-        runManager->BeamOn(1000000);
+    // Process macro or start UI session
+    //
+    if ( ! ui ) {
+      // batch mode
+      G4String command = "/control/execute ";
+      G4String fileName = argv[1];
+      UImanager->ApplyCommand(command+fileName);
     }
-#endif
+    else {
+      // interactive mode
+      UImanager->ApplyCommand("/control/execute init_vis.mac");
+      ui->SessionStart();
+      delete ui;
+    }
 
-#ifdef G4VIS_USE
-    G4VisManager* visManager = new G4VisExecutive;
-    visManager->SetVerboseLevel(4);
-    visManager->Initialize();
-#endif
+    // Job termination
+    // Free the store: user actions, physics_list and detector_description are
+    // owned and deleted by the run manager, so they should not be deleted
+    // in the main() program !
 
-#ifdef G4UI_USE
-    G4UIExecutive* ui = new G4UIExecutive(argc, argv);
-#ifdef G4VIS_USE
-    UImanager->ApplyCommand("/control/execute init_vis.mac");
-#endif
-    ui->SessionStart();
-    delete ui;
-#endif
-
+    delete visManager;
     delete runManager;
-    return 0;
 }
 
 
