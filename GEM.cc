@@ -1,13 +1,9 @@
-
-//#define G4MULTITHREADED
-#define G4DEBUG_FIELD
-
-//#undef G4UI_USE
-//#undef G4VIS_USE
-#undef G4MULTITHREADED
-
+//#undef G4MULTITHREADED
 #include <cstdio>
 #include <ctime>
+
+#undef G4VIS_USE
+#undef G4UI_USE
 
 #ifdef G4MULTITHREADED
 #include "G4MTRunManager.hh"
@@ -32,25 +28,12 @@
 #include "GEMParallelWorld.hh"
 #include "G4Navigator.hh"
 #include "G4GeometryTolerance.hh"
-#include "G4Navigator.hh"
 #include "G4GeometryManager.hh"
 #include "G4TransportationManager.hh"
-#include "G4PropagatorInField.hh"
-#include "G4PathFinder.hh"
-#include "G4FPEDetection.hh"
-#include "G4RunManagerKernel.hh"
-#include "G4Threading.hh"
-#include "G4WorkerRunManager.hh"
-#include "G4EventManager.hh"
-#include "G4EmParameters.hh"
+#include "QGSP_BIC.hh"
 
 int main(int argc,char** argv)
 {
-    G4UIExecutive* ui = 0;
-    if ( argc == 1 ) {
-      ui = new G4UIExecutive(argc, argv);
-    }
-
     // Set the custom seed for the random engine
     G4Random::setTheEngine(new CLHEP::RanecuEngine);
     G4long seed = time(NULL);
@@ -65,10 +48,6 @@ int main(int argc,char** argv)
 
     G4GeometryManager::GetInstance()->SetWorldMaximumExtent(4.0*m);
 
-    //    G4cout << "Computed tolerance = "
-    //           << G4GeometryTolerance::GetInstance()->GetSurfaceTolerance()/mm
-    //           << " mm" << G4endl;
-
     GEMDetectorConstruction* massWorld = new GEMDetectorConstruction;
     massWorld->RegisterParallelWorld(new GEMParallelWorld("GEMParallelWorld"));
     massWorld->RegisterParallelWorld(new GEMVoxParallelWorld("GEMVoxParallelWorld"));
@@ -80,41 +59,31 @@ int main(int argc,char** argv)
 
     runManager->SetUserInitialization(new GEMActionInitialization);
 
-   // runManager->Initialize();
-
     G4Navigator* navigator = G4TransportationManager::GetTransportationManager()->GetNavigatorForTracking();
     navigator->SetPushVerbosity(false);
 
+    runManager->Initialize();
+    G4UImanager* UImanager = G4UImanager::GetMasterUIpointer();
+
+#ifdef G4UI_USE
+    G4UIExecutive* ui = new G4UIExecutive(argc, argv);
+#ifdef G4VIS_USE
     G4VisManager* visManager = new G4VisExecutive;
-    // G4VisExecutive can take a verbosity argument - see /vis/verbose guidance.
-    // G4VisManager* visManager = new G4VisExecutive("Quiet");
     visManager->Initialize();
+    UImanager->ApplyCommand("/control/execute init_vis.mac");
+#endif
+    ui->SessionStart();
+    delete ui;
 
-    // Get the pointer to the User Interface manager
-    G4UImanager* UImanager = G4UImanager::GetUIpointer();
-
-    // Process macro or start UI session
-    //
-    if ( ! ui ) {
-      // batch mode
-      G4String command = "/control/execute ";
-      G4String fileName = argv[1];
-      UImanager->ApplyCommand(command+fileName);
+#else
+    for (G4int i = 0 ; i < 100; i++)
+    {
+        runManager->BeamOn(1000000);
     }
-    else {
-      // interactive mode
-      UImanager->ApplyCommand("/control/execute init_vis.mac");
-      ui->SessionStart();
-      delete ui;
-    }
+#endif
 
-    // Job termination
-    // Free the store: user actions, physics_list and detector_description are
-    // owned and deleted by the run manager, so they should not be deleted
-    // in the main() program !
-
-    delete visManager;
     delete runManager;
+    return 0;
 }
 
 

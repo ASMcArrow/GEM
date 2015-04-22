@@ -18,7 +18,7 @@ GEMMagneticField::~GEMMagneticField()
     delete Messenger;
 }
 
-void GEMMagneticField::GetFieldValue(const G4double[4], G4double *Bfield) const
+void GEMMagneticField::GetFieldValue(const G4double unused[4], G4double *Bfield) const
 {
     Bfield[0] = fieldVal.x();
     Bfield[1] = fieldVal.y();
@@ -27,11 +27,24 @@ void GEMMagneticField::GetFieldValue(const G4double[4], G4double *Bfield) const
 
 void GEMMagneticField::SetFieldValue(const G4ThreeVector &newFieldValue)
 {
-    fieldVal = newFieldValue*CLHEP::gauss;
+    fieldVal = newFieldValue;
+    G4FieldManager* fMan = new G4FieldManager;
+    fMan->SetDetectorField(this);
+    fMan->CreateChordFinder(this);
 
-    /*#ifndef G4MULTITHREADED
-    G4MTRunManager::GetMasterRunManager()->GeometryHasBeenModified();
-#else
-    G4RunManager::GetRunManager()->GeometryHasBeenModified();
-#endif*/
+    G4TransportationManager* tMan = G4TransportationManager::GetTransportationManager();
+    std::vector<G4VPhysicalVolume*>::iterator it = tMan->GetWorldsIterator();
+    for(int i = 0; i < tMan->GetNoWorlds(); i++)
+    {
+        if((*it)->GetName() == "WorldPhys")
+        {
+            (*it)->GetLogicalVolume()->GetDaughter(9)->GetLogicalVolume()->SetFieldManager(fMan, true);
+        }
+    }
+
+     /*#ifndef G4MULTITHREADED
+            G4MTRunManager::GetMasterRunManager()->GeometryHasBeenModified();
+        #else
+            G4RunManager::GetRunManager()->GeometryHasBeenModified();
+        #endif*/
 }

@@ -13,7 +13,7 @@ G4int DebugUISession::ReceiveG4cout(const G4String& coutString)
     stream << G4GetThreadId();
 
     std::ofstream file;
-    std::string string = "/media/large2/"+stream.str();
+    std::string string = stream.str();
     char* name = (char*)(string.c_str());
     file.open(name, std::ios_base::app | std::ios_base::out);
     file << coutString << "\n";
