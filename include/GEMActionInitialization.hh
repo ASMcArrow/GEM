@@ -5,13 +5,17 @@
 
 class GEMActionInitialization : public G4VUserActionInitialization
 {
-  public:
+public:
 
     GEMActionInitialization();
     virtual ~GEMActionInitialization();
 
     virtual void BuildForMaster() const;
     virtual void Build() const;
+
+private:
+    std::vector<G4String> NameVector;
+
 };
 
 #endif // GEMACTIONINITIASLIZATION_HH

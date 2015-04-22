@@ -22,15 +22,13 @@
 #include <iostream>
 #define _USE_MATH_DEFINES
 
-GEMRunAction::GEMRunAction(const G4String detectorName1, const G4String detectorName2, const G4String detectorName3) : G4UserRunAction()
+GEMRunAction::GEMRunAction(const std::vector<G4String> nameVector) : G4UserRunAction()
 {
 //    G4UImanager* UImanager = G4UImanager::GetUIpointer();
 //    DebugUISession * LoggedSession = new DebugUISession;
 //    UImanager->SetCoutDestination(LoggedSession);
 
-    DepthDetectorName = detectorName1;
-    ProfileDetectorName1 = detectorName2;
-    ProfileDetectorName2 = detectorName3;
+    NameVector = nameVector;
 
     ScanVertical = 0;
     ScanHorizontal = 0;
@@ -58,7 +56,7 @@ GEMRunAction::~GEMRunAction()
 
 G4Run* GEMRunAction::GenerateRun()
 {
-    return new GEMRun(DepthDetectorName, ProfileDetectorName1, ProfileDetectorName2, 0);
+    return new GEMRun(NameVector, 0);
 }
 
 void GEMRunAction::BeginOfRunAction(const G4Run* aRun)
@@ -124,7 +122,7 @@ void GEMRunAction::EndOfRunAction(const G4Run* aRun)
         }
     }
 
-    if (ScanHorizontal >= 9)
+    if (ScanHorizontal >= 7)
     {
         std::ofstream depthFile("GEMDepthMT.txt");
         for (G4int i = 0; i < 100; i++)
