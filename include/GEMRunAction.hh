@@ -23,11 +23,9 @@ private:
 
     std::vector<G4String> NameVector;
 
-    G4double Cells1[100][100], Cells2[100][100], Cells3[100][100];
-    G4double Depth[100];
     G4int ScanVertical, ScanHorizontal;
-    G4int CurrentNHits, PreviousNHits;
     G4ThreeVector MagField;
+    G4double Cells1[100][100], Cells2[100][100], Depth[100];
 };
 
 #endif

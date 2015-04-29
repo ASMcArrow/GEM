@@ -11,24 +11,46 @@ GEMRun::GEMRun(const std::vector<G4String> namevector, G4bool verbose) : G4Run()
         G4String collName = detector->GetCollectionName(0);
         G4int collectionID = SDman->GetCollectionID(collName);
         IDVector.push_back(collectionID);
-        HitVectorVector.push_back(std::vector<GEMDetectorHit*> (0));
     }
 
     Verbose = verbose;
-    Cells = new G4double*[200];
-    for (int i = 0; i < 200; i++)
+
+    Cells1 = new G4double*[100];
+    for (int i = 0; i < 100; i++)
     {
-        Cells[i] = new G4double[200];
-        for (int j = 0; j < 200; j++)
-            Cells[i][j] = 0;
+        Cells1[i] = new G4double[100];
+        for (int j = 0; j < 100; j++)
+            Cells1[i][j] = 0;
+    }
+
+    Cells2 = new G4double*[100];
+    for (int i = 0; i < 100; i++)
+    {
+        Cells2[i] = new G4double[100];
+        for (int j = 0; j < 100; j++)
+            Cells2[i][j] = 0;
+    }
+
+    Depth = new G4double[100];
+    for (int i = 0; i < 100; i++)
+    {
+        Depth[i] = 0;
     }
 }
 
-GEMRun::~GEMRun() {
-    for (int i = 0; i < 200; i++) {
-        delete[] Cells[i];
+GEMRun::~GEMRun()
+{
+    for (int i = 0; i < 100; i++) {
+        delete[] Cells1[i];
     }
-    delete[] Cells;
+    delete[] Cells1;
+
+    for (int i = 0; i < 100; i++) {
+        delete[] Cells2[i];
+    }
+    delete[] Cells2;
+
+    delete[] Depth;
 }
 
 void GEMRun::RecordEvent(const G4Event* aEvent)
@@ -38,13 +60,12 @@ void GEMRun::RecordEvent(const G4Event* aEvent)
     G4HCofThisEvent* HCE = aEvent->GetHCofThisEvent();
     if(HCE!=NULL)
     {
-        GEMDetectorHitsCollection* HC = (GEMDetectorHitsCollection*)(HCE -> GetHC(CollectionID));
-        if(HC!=NULL)
+        GEMDetectorHitsCollection* HC1 = (GEMDetectorHitsCollection*)(HCE -> GetHC(IDVector[1]));
+        if(HC1!=NULL)
         {
-            //GEMDetectorHit *hit = 0;
-            for (G4int i = 0; i < HC->entries(); i++)
+            for (G4int i = 0; i < HC1->entries(); i++)
             {
-                GEMDetectorHit *hit = (GEMDetectorHit*)(HC->GetHit(i));
+                GEMDetectorHit *hit = (GEMDetectorHit*)(HC1->GetHit(i));
                 if (Verbose)
                 {
                     G4cout << "HitsVector Initial: " << "i = "<< i << " Energy deposition is " << hit->GetEdep()
@@ -53,7 +74,33 @@ void GEMRun::RecordEvent(const G4Event* aEvent)
                 G4int j = hit->GetPos()[0];
                 G4int k = hit->GetPos()[1];
 
-                Cells[j][k] += hit->GetEdep()/hit->GetArea();
+                Cells1[j][k] += hit->GetEdep();
+            }
+        }
+
+        GEMDetectorHitsCollection* HC2 = (GEMDetectorHitsCollection*)(HCE -> GetHC(IDVector[2]));
+        if(HC2!=NULL)
+        {
+            // G4cout << "Number of hits in this run in IsoProfile detector "
+            //        << HC2->entries() << G4endl;
+            for (G4int i = 0; i < HC2->entries(); i++)
+            {
+                GEMDetectorHit *hit = (GEMDetectorHit*)(HC2->GetHit(i));
+                G4int j = hit->GetPos()[0];
+                G4int k = hit->GetPos()[1];
+
+                Cells2[j][k] += hit->GetEdep();
+            }
+        }
+
+        GEMDetectorHitsCollection* HC = (GEMDetectorHitsCollection*)(HCE -> GetHC(IDVector[0]));
+        if(HC!=NULL)
+        {
+            for (G4int i = 0; i < HC->entries(); i++)
+            {
+                GEMDetectorHit *hit = (GEMDetectorHit*)(HC->GetHit(i));
+                G4int j = hit->GetPos()[0];
+                Depth[j] += hit->GetEdep();
             }
         }
     }
@@ -62,10 +109,22 @@ void GEMRun::RecordEvent(const G4Event* aEvent)
 void GEMRun::Merge(const G4Run * aRun)
 {
     const GEMRun *localRun = static_cast<const GEMRun*>(aRun);
-    for (int i = 0; i < 200; i++)
+
+    for (int i = 0; i < 100; i++)
     {
-        for (int j = 0; j < 200; j++)
-            Cells[i][j] += localRun->Cells[i][j];
+        for (int j = 0; j < 100; j++)
+            Cells1[i][j] += localRun->Cells1[i][j];
+    }
+
+    for (int i = 0; i < 100; i++)
+    {
+        for (int j = 0; j < 100; j++)
+            Cells2[i][j] += localRun->Cells2[i][j];
+    }
+
+    for (int i = 0; i < 100; i++)
+    {
+        Depth[i] += localRun->Depth[i];
     }
 
     G4Run::Merge(aRun);
