@@ -10,10 +10,10 @@
 
 class GEMRun : public G4Run
 {
-public:
 
-  GEMRun(const G4String detectorName, G4bool verbose);
-  virtual ~GEMRun();
+public:
+    GEMRun(const std::vector<G4String> namevector, G4bool verbose);
+    virtual ~GEMRun();
 
   // virtual method from G4Run.
   // The method is overriden in this class for scoring.
@@ -25,6 +25,8 @@ public:
 private:
   G4String CollName;
   G4int CollectionID;
+    std::vector<G4int> IDVector;
+    std::vector<G4String> NameVector;
   G4bool Verbose;
   G4double** Cells;
 };

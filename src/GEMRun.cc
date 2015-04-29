@@ -1,13 +1,19 @@
 #include "GEMRun.hh"
 #include "G4SDManager.hh"
 
-GEMRun::GEMRun(const G4String detectorName, G4bool verbose) : G4Run()
+GEMRun::GEMRun(const std::vector<G4String> namevector, G4bool verbose) : G4Run()
 {
+    NameVector = namevector;
     G4SDManager* SDman = G4SDManager::GetSDMpointer();
-    G4VSensitiveDetector* detector = SDman->FindSensitiveDetector(detectorName);
+    for (G4int i = 0; i < NameVector.size(); i++)
+    {
+        G4VSensitiveDetector* detector = SDman->FindSensitiveDetector(NameVector[i]);
+        G4String collName = detector->GetCollectionName(0);
+        G4int collectionID = SDman->GetCollectionID(collName);
+        IDVector.push_back(collectionID);
+        HitVectorVector.push_back(std::vector<GEMDetectorHit*> (0));
+    }
 
-    CollName = detector->GetCollectionName(0);
-    CollectionID = SDman->GetCollectionID(CollName);
     Verbose = verbose;
     Cells = new G4double*[200];
     for (int i = 0; i < 200; i++)

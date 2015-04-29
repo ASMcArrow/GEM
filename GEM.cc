@@ -78,7 +78,7 @@ int main(int argc,char** argv)
 #else
     for (G4int i = 0 ; i < 100; i++)
     {
-        runManager->BeamOn(1000000);
+        runManager->BeamOn(1000);
     }
 #endif
 
