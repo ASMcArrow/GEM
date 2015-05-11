@@ -41,7 +41,7 @@ int main(int argc,char** argv)
 
 #ifdef G4MULTITHREADED
     G4MTRunManager* runManager = new G4MTRunManager;
-    runManager->SetNumberOfThreads(1);
+    runManager->SetNumberOfThreads(8);
 #else
     G4RunManager* runManager = new G4RunManager;
 #endif
@@ -78,7 +78,7 @@ int main(int argc,char** argv)
 #else
     for (G4int i = 0 ; i < 100; i++)
     {
-        runManager->BeamOn(1000);
+        runManager->BeamOn(10000);
     }
 #endif
 

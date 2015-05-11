@@ -3,7 +3,7 @@
 #/vis/viewer/set/autoRefresh false
 #/vis/verbose errors
 
-#/vis/drawVolume
+/vis/drawVolume world
 
 #/GEM/setMagField 950 950 0
 #/run/reinitializeGeometry

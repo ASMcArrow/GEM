@@ -31,7 +31,7 @@ void GEMVoxParallelWorld::Construct()
     // Profile at zero depth
     G4Box *ghostDetectorZero = new G4Box("GhostDetectorBoxZero", detHalfDimension, detHalfDimension, 0.25*cm);
     GhostDetectorZeroLog = new G4LogicalVolume(ghostDetectorZero, 0, "GhostDetectorZeroLog");
-    new G4PVPlacement(0, G4ThreeVector(0, 0, 0.25*cm - 10.9*cm), GhostDetectorZeroLog, "GhostDetectorZeroPhys", worldLog, 0, 0);
+    new G4PVPlacement(0, G4ThreeVector(0, 0, 0.25*cm - 11*cm + 15*mm), GhostDetectorZeroLog, "GhostDetectorZeroPhys", worldLog, 0, 0);
 
     G4VisAttributes* visAttributesZero = new G4VisAttributes;
     visAttributesZero->SetColor(0,0,1);

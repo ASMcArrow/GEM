@@ -73,8 +73,8 @@ void GEMRunAction::BeginOfRunAction(const G4Run* aRun)
             ScanHorizontal = 0;
     }
 
-    MagField.setX((G4double)((ScanHorizontal*((G4double)1900/9))-950)*gauss);
-    MagField.setY((G4double)((ScanVertical*((G4double)1900/9))-950)*gauss);
+    MagField.setX((G4double)((ScanHorizontal*((G4double)1800/9))-900)*gauss);
+    MagField.setY((G4double)((ScanVertical*((G4double)1800/9))-900)*gauss);
     MagField.setZ(0);
 
     GEMDetectorConstruction::MagneticField->SetFieldValue(MagField);
@@ -94,15 +94,16 @@ void GEMRunAction::EndOfRunAction(const G4Run* aRun)
 
     if(!IsMaster()) return;
 
-    if (ScanHorizontal >= 7)
+    for (G4int i = 0; i < 100; i++)
+        Depth[i] += gemRun->GetDepth()[i];
+
+    std::ofstream depthFile("GEMDepthMT.txt");
+    if (Depth[0]!=0)
     {
         for (G4int i = 0; i < 100; i++)
-            Depth[i] += gemRun->GetDepth()[i];
-
-        std::ofstream depthFile("GEMDepthMT.txt");
-        for (G4int i = 0; i < 100; i++)
-            depthFile << i*22.0/100.0 << " " << Depth[i]/Depth[0] << "\n";
+            depthFile << ((i+0.5)*22.0/100.0)-0.237 << " " << Depth[i]/Depth[0] << "\n";
     }
+
 
     // Here is the temporary code for determining the distance between the points
     //    G4double max = 0;

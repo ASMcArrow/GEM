@@ -65,14 +65,19 @@ G4VPhysicalVolume* GEMDetectorConstruction::Construct()
     }
 
     // Aperture
-    /*G4Tubs* aperture = new G4Tubs("Aperture", 2.5*cm, 50*cm, 3.25*cm, 0, CLHEP::twopi);
+    G4Tubs* aperture = new G4Tubs("Aperture", 2.5*cm, 50*cm, 3.25*cm, 0, CLHEP::twopi);
     G4LogicalVolume* apertureLogic = new G4LogicalVolume(aperture, MaterialMap["Brass"], "ApertureLogic");
-    G4VPhysicalVolume* aperturePhys = new G4PVPlacement(0, G4ThreeVector(0, 0, -30*cm-3.25*cm), apertureLogic, "AperturePhys", worldLogic, false, 0);*/
+    G4VPhysicalVolume* aperturePhys = new G4PVPlacement(0, G4ThreeVector(0, 0, -30*cm-3.25*cm), apertureLogic, "AperturePhys", worldLogic, false, 0);
+
+    // Phantom front wall
+    G4Box* wall = new G4Box("Wall", 15*cm, 15*cm, 7.5*mm);
+    G4LogicalVolume* wallLogic  = new G4LogicalVolume(wall, MaterialMap["Plex"], "WallLogic");
+    G4VPhysicalVolume* wallPhys = new G4PVPlacement(0, G4ThreeVector(0, 0, -11*cm+7.5*mm), wallLogic, "WallPhys", worldLogic, false, 0);
 
     // Phantom
     G4Box* phantom = new G4Box("Phantom", 15*cm, 15*cm, 11*cm);
-    PhantomLogic = new G4LogicalVolume(phantom, MaterialMap["Water"], "PhantomLogic");
-    G4VPhysicalVolume* phantomPhys = new G4PVPlacement(0, G4ThreeVector(0, 0, 0), PhantomLogic, "PhantomPhys", worldLogic, false, 0);
+    G4LogicalVolume* phantomLogic = new G4LogicalVolume(phantom, MaterialMap["Water"], "PhantomLogic");
+    G4VPhysicalVolume* phantomPhys = new G4PVPlacement(0, G4ThreeVector(0, 0, 15*mm), phantomLogic, "PhantomPhys", worldLogic, false, 0);
 
     return worldPhys;
 }
@@ -139,6 +144,9 @@ void GEMDetectorConstruction::InitializeMaterials()
     PMMA -> AddElement(C, 5);
     PMMA -> AddElement(O, 2);
     MaterialMap["PMMA"] = PMMA;
+
+    G4Material* Plex = nistManager->FindOrBuildMaterial("G4_PLEXIGLASS");
+    MaterialMap["Plex"] = Plex;
 
     G4Material* StainlessSteel = new G4Material("StainlessSteel", 8.06*g/cm3, 6);
     StainlessSteel->AddElement(C, 0.001);

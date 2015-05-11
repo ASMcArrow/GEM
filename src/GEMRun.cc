@@ -31,7 +31,6 @@ GEMRun::GEMRun(const std::vector<G4String> namevector, G4bool verbose) : G4Run()
             Cells2[i][j] = 0;
     }
 
-    Depth = new G4double[100];
     for (int i = 0; i < 100; i++)
     {
         Depth[i] = 0;
@@ -49,8 +48,6 @@ GEMRun::~GEMRun()
         delete[] Cells2[i];
     }
     delete[] Cells2;
-
-    delete[] Depth;
 }
 
 void GEMRun::RecordEvent(const G4Event* aEvent)
@@ -109,6 +106,8 @@ void GEMRun::RecordEvent(const G4Event* aEvent)
 void GEMRun::Merge(const G4Run * aRun)
 {
     const GEMRun *localRun = static_cast<const GEMRun*>(aRun);
+
+    G4cout << "Run " << localRun->GetRunID() << " is merged into run " << this->GetRunID() << G4endl;
 
     for (int i = 0; i < 100; i++)
     {

@@ -34,7 +34,7 @@ private:
 
     G4double** Cells1;
     G4double** Cells2;
-    G4double* Depth;
+    G4double Depth[100];
 };
 
 #endif // GEMRUN_H
